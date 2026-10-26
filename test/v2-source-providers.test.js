@@ -5,6 +5,7 @@ import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
 import { upstream,sid,other } from './support/v2-source-providers/fixture.mjs';
 import { createProviderTransport,createInventoryEnrichment,createMooseEngine } from '../server/v2/source-providers/index.js';
+import { withControlledPage } from '../server/v2/source-providers/browser.js';
 import { createSourceHost } from '../server/v2/management-adapters/source-host/index.js';
 import { createManagementSourceAdapters } from '../server/v2/management-adapters/sources/index.js';
 import { fixture } from './support/v2-source-adapters/fixture.mjs';
@@ -159,4 +160,31 @@ test('unknown, conflicting currency, wrong profile scope and duplicate quotes ne
 test('concurrent owner stops await a browser launched during cancellation',async t=>{
  const f=await setup(t);const p=f.engine(player,{...opts(),origin:f.u.origin}),done=assert.rejects(p,{errorCode:'SOURCE_TIMEOUT'});
  await Promise.all([f.transport.stop(),f.transport.stop()]);assert.equal(f.transport.active,0);await done;assert.equal(f.u.stats.activeSockets,0);
+});
+
+
+test('abort, concurrent owner stops and task cleanup share one Chromium close until process exit',async t=>{
+ const f=await setup(t),session=f.transport.open('moose');
+ let enter,releaseTask,releaseClose,browser,closeCalls=0;
+ const entered=new Promise(resolve=>{enter=resolve;}),taskGate=new Promise(resolve=>{releaseTask=resolve;}),closeGate=new Promise(resolve=>{releaseClose=resolve;});
+ t.after(()=>{releaseTask();releaseClose();});
+ const work=withControlledPage({session,executablePath,task:async page=>{
+  browser=page.browser();const originalClose=browser.close.bind(browser);
+  // Keep the real browser/process alive while cancellation paths overlap.
+  browser.close=async()=>{closeCalls++;await closeGate;return originalClose();};
+  enter();await taskGate;
+ }}),rejected=assert.rejects(work,{errorCode:'SOURCE_TIMEOUT'});
+ await entered;
+ let stopped=false;
+ const stopping=Promise.all([f.transport.stop(),f.transport.stop()]).then(()=>{stopped=true;});
+ try {
+  releaseTask();await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(closeCalls,1,'all cancellation paths must await the same real browser close');
+  assert.equal(stopped,false,'owner stop must wait for the browser process');
+  assert.equal(f.transport.active,1);
+ } finally {releaseClose();releaseTask();await Promise.all([stopping,rejected]);}
+ assert.equal(closeCalls,1);assert.equal(f.transport.active,0);
+ assert.equal(browser.connected,false);
+ const child=browser.process();assert.ok(child.exitCode!==null||child.signalCode!==null,'Chromium process has exited before stop returns');
+ assert.equal(f.u.calls.length,0);
 });

@@ -1,3 +1,4 @@
+import { realpathSync } from 'node:fs';
 import { chromiumExecutablePath } from '../../../server/chromium-runtime.js';
 import {observations} from '../v2-candidate-host/test-guard.mjs';
 import assert from 'node:assert/strict';
@@ -10,7 +11,9 @@ const configuration={enabled:true,revision:1,proxyUrl:u.origin},inventory={enabl
 const trustedOrigins=new Set(['https://moose.gg','https://api.scmm.app','https://api.rusthelp.com','https://api.steampowered.com','https://steamcommunity.com','https://store.steampowered.com']);
 // Explicit test native boundary: official paths stay intact; only test I/O is mapped to our loopback upstream.
 const gateway=async(url,options)=>{const parsed=new URL(url);assert.ok(trustedOrigins.has(parsed.origin),url);calls.push({origin:parsed.origin,path:parsed.pathname,proxy:Boolean(options.proxyUrl),insideTransaction:f?.identity.repo.db.isTransaction===true});const response=await fetch(u.origin+parsed.pathname+parsed.search,{...options,redirect:'manual'});if(intercept&&/^\/api\/inventory\/\d+$/.test(parsed.pathname))await intercept();return new Response(response.body,{status:response.status,headers:response.headers});};
-const chrome=chromiumExecutablePath();
+// Discovery may return a package-manager/CI symlink. The owner deliberately
+// accepts only an explicit canonical executable, just like production runtime.
+const chrome=realpathSync(chromiumExecutablePath());
 const provider={enabled:mode!=='provider-disabled',capabilities:{moose:true,inventory:true},readConfiguration:()=>configuration,readInventoryConfiguration:()=>inventory,fetchImpl:gateway,
  proxyFetch:mode==='provider-missing-proxy'?undefined:gateway,proxyWebSocket:mode==='provider-missing-ws'?undefined:(url,protocols,options)=>{const parsed=new URL(url);assert.equal(parsed.origin,'wss://moose.gg');assert.equal(options.proxyUrl,u.origin);return new WebSocket(u.origin.replace('http:','ws:')+parsed.pathname+parsed.search,protocols,options);},
  chromium:{executablePath:chrome,allowedExecutablePaths:mode==='provider-untrusted-chromium'?[]:[chrome]},

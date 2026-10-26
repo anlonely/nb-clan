@@ -31,6 +31,9 @@ jobs:
           if ! test -x /usr/bin/chromium && ! test -x /usr/bin/chromium-browser; then
             sudo ln -s "$PUPPETEER_EXECUTABLE_PATH" /usr/bin/chromium
           fi
+      - name: Check release contents
+        if: matrix.suite == 'unit'
+        run: npm run check:release
       - run: node scripts/test.mjs ${{ matrix.suite }}
       - run: npm run verify --prefix wechat-miniprogram
         if: matrix.suite == 'mini'

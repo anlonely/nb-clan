@@ -7,13 +7,17 @@ export async function withControlledPage({ session, executablePath, task }) {
   requireFact(typeof executablePath === 'string' && executablePath.startsWith('/'), 'SOURCE_NOT_CONFIGURED');
   let browser, page, closing, mainTarget, launch; const pending = new Set(), sockets = new Map();
   const track = p => { pending.add(p); p.then(() => pending.delete(p), e => { pending.delete(p); session.fail(e); }); return p; };
-  const close = () => closing ||= (async () => { for (const socket of sockets.values()) socket.close(); if (browser) await browser.close().catch(() => {}); })();
+  // Cancellation can arrive during launch, navigation, or task cleanup. Keep one
+  // close promise across all three: a second Puppeteer close can disconnect its
+  // pipe transport before the first close has waited for Chromium to exit.
+  const close = () => closing ||= (async () => {
+    for (const socket of sockets.values()) socket.close();
+    await launch?.catch(() => {});
+    if (browser) await browser.close().catch(() => {});
+  })();
   const onAbort = () => { void close(); }; session.signal.addEventListener('abort', onAbort, { once:true });
   session.onClose(async () => {
-    await launch?.catch(()=>{});
-    // close() may have run while launch was still pending; its first promise then had no browser.
-    if (browser && !browser.connected) await closing;
-    else if (browser) { closing = null; await close(); }
+    await close();
     await Promise.allSettled([...pending]);
   });
   try {
@@ -25,7 +29,7 @@ export async function withControlledPage({ session, executablePath, task }) {
         '--force-webrtc-ip-handling-policy=disable_non_proxied_udp','--disable-quic','--disable-features=MediaRouter,OptimizationHints,AutofillServerCommunication,CertificateTransparencyComponentUpdater'] }).then(value => (browser = value));
     await launch;
     // Abort may arrive during launch: close the newly created browser before any navigation.
-    if (session.signal.aborted) { closing = null; await close(); session.check(); }
+    if (session.signal.aborted) { await close(); session.check(); }
     const context = await browser.createBrowserContext();
     page = await context.newPage(); mainTarget = page.target();
     browser.on('targetcreated', target => { if (target !== mainTarget) track(target.page().then(p => p?.close())); });
