@@ -13,7 +13,7 @@ export const publicFiles = new Set([
   'Dockerfile', 'Dockerfile.prebuilt', 'Dockerfile.prebuilt.dockerignore',
   'docker-compose.yml', 'docker-compose.prebuilt.yml', 'docker-compose.production.yml', 'docker-compose.proxy.yml', 'docker-compose.bind-data.yml',
   'package.json', 'package-lock.json', 'index.html', 'vite.config.js',
-  'README.md', 'LICENSE', 'NOTICE', 'CONTRIBUTING.md', 'SECURITY.md', 'CHANGELOG.md', 'THIRD_PARTY_NOTICES.md',
+  'README.md', 'README.en.md', 'LICENSE', 'NOTICE', 'CONTRIBUTING.md', 'SECURITY.md', 'CHANGELOG.md', 'THIRD_PARTY_NOTICES.md',
   'scripts/test.mjs', 'scripts/init-admin.js', 'scripts/setup.mjs', 'scripts/start.mjs', 'scripts/doctor.mjs', 'scripts/runtime-config.mjs',
   'scripts/sqlite-backup.js', 'scripts/sqlite-index-check.js', 'scripts/sqlite-integrity-check.js',
   'scripts/sqlite-migrate-store.js', 'scripts/sqlite-verify-store.js',

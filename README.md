@@ -1,6 +1,10 @@
 # Clan Portal
 
-面向 Rust 战队的自托管成员、开荒安排与社区管理系统。React + Vite 前端、Node.js + Express 服务端、SQLite 存储；提供中文和英文 Web 界面。采用 AGPL-3.0-only。
+[简体中文](README.md) | [English](README.en.md)
+
+Clan Portal 是面向 Rust 游戏战队的自托管社区管理系统，提供成员与队伍管理、开荒安排、报名、战绩查询和角色权限。支持中文及英文 Web 界面，并可按需配置 Discord、KOOK 和外部游戏数据源。
+
+采用 React + Vite 前端、Node.js + Express 服务端和 SQLite 存储，以 AGPL-3.0-only 许可证开源。
 
 ## 功能与范围
 
