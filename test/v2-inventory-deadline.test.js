@@ -40,8 +40,18 @@ function fixture(t, { kind, now = Date.now, afterCore = () => {} }) {
 
 for (const kind of ['dlc', 'enrichment']) {
   test(`slow optional ${kind} is cancelled while completed assets and profile survive`, async t => {
-    const f = fixture(t, { kind }), caller = new AbortController();
-    const result = await f.query(caller.signal);
+    // Core parsing and optional setup must not compete with the runner's wall
+    // clock. Advance only the owned optional timer after the slow work starts.
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const f = fixture(t, { kind, now: () => 1000 }), caller = new AbortController();
+    const pending = f.query(caller.signal);
+    await f.entered;
+    assert.equal(f.signal().aborted, false);
+    t.mock.timers.tick(24);
+    assert.equal(f.signal().aborted, false);
+    t.mock.timers.tick(1);
+    assert.equal(f.signal().aborted, true);
+    const result = await pending;
     assert.equal(caller.signal.aborted, false);
     assert.equal(f.signal().aborted, true);
     assert.equal(result.inventory.items[0].name, 'Observed skin');
@@ -54,9 +64,11 @@ for (const kind of ['dlc', 'enrichment']) {
   });
 
   test(`caller cancellation during optional ${kind} still terminates the query`, async t => {
-    const f = fixture(t, { kind }), caller = new AbortController();
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const f = fixture(t, { kind, now: () => 1000 }), caller = new AbortController();
     const rejected = assert.rejects(f.query(caller.signal), { errorCode: 'SOURCE_TIMEOUT' });
     await f.entered;
+    assert.equal(f.signal().aborted, false);
     caller.abort();
     await rejected;
     assert.equal(f.signal().aborted, true);
@@ -70,4 +82,5 @@ test('optional budget counts core inventory time and skips optional network afte
   assert.equal(result.inventory.items[0].name, 'Observed skin');
   assert.deepEqual(result.errors, [{ sourceId: 'store', errorCode: 'SOURCE_TIMEOUT' }]);
   assert.deepEqual(f.calls, [`/inventory/${sid}/252490/2`]);
+  assert.equal(f.signal(), undefined, 'An expired budget must skip optional work entirely');
 });

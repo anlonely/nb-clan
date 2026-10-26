@@ -26,11 +26,8 @@ jobs:
         if: matrix.suite == 'browser'
         run: |
           test -x "$PUPPETEER_EXECUTABLE_PATH"
-          # Isolated probes intentionally discard inherited environment values.
-          # Provide the standard Linux path their deterministic lookup accepts.
-          if ! test -x /usr/bin/chromium && ! test -x /usr/bin/chromium-browser; then
-            sudo ln -s "$PUPPETEER_EXECUTABLE_PATH" /usr/bin/chromium
-          fi
+          readlink -f "$PUPPETEER_EXECUTABLE_PATH"
+          "$PUPPETEER_EXECUTABLE_PATH" --version
       - name: Check release contents
         if: matrix.suite == 'unit'
         run: npm run check:release

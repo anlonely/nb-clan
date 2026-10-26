@@ -1,5 +1,3 @@
-import { realpathSync } from 'node:fs';
-import { chromiumExecutablePath } from '../../../server/chromium-runtime.js';
 import {observations} from '../v2-candidate-host/test-guard.mjs';
 import assert from 'node:assert/strict';
 import WebSocket from 'ws';
@@ -11,9 +9,10 @@ const configuration={enabled:true,revision:1,proxyUrl:u.origin},inventory={enabl
 const trustedOrigins=new Set(['https://moose.gg','https://api.scmm.app','https://api.rusthelp.com','https://api.steampowered.com','https://steamcommunity.com','https://store.steampowered.com']);
 // Explicit test native boundary: official paths stay intact; only test I/O is mapped to our loopback upstream.
 const gateway=async(url,options)=>{const parsed=new URL(url);assert.ok(trustedOrigins.has(parsed.origin),url);calls.push({origin:parsed.origin,path:parsed.pathname,proxy:Boolean(options.proxyUrl),insideTransaction:f?.identity.repo.db.isTransaction===true});const response=await fetch(u.origin+parsed.pathname+parsed.search,{...options,redirect:'manual'});if(intercept&&/^\/api\/inventory\/\d+$/.test(parsed.pathname))await intercept();return new Response(response.body,{status:response.status,headers:response.headers});};
-// Discovery may return a package-manager/CI symlink. The owner deliberately
-// accepts only an explicit canonical executable, just like production runtime.
-const chrome=realpathSync(chromiumExecutablePath());
+// The launcher supplies its explicitly selected canonical executable. Keep the
+// candidate's exact allowlist/ownership checks and clean environment intact.
+const chrome=process.argv[4];
+assert.ok(typeof chrome==='string'&&chrome.startsWith('/'),'Explicit Chromium executable is required');
 const provider={enabled:mode!=='provider-disabled',capabilities:{moose:true,inventory:true},readConfiguration:()=>configuration,readInventoryConfiguration:()=>inventory,fetchImpl:gateway,
  proxyFetch:mode==='provider-missing-proxy'?undefined:gateway,proxyWebSocket:mode==='provider-missing-ws'?undefined:(url,protocols,options)=>{const parsed=new URL(url);assert.equal(parsed.origin,'wss://moose.gg');assert.equal(options.proxyUrl,u.origin);return new WebSocket(u.origin.replace('http:','ws:')+parsed.pathname+parsed.search,protocols,options);},
  chromium:{executablePath:chrome,allowedExecutablePaths:mode==='provider-untrusted-chromium'?[]:[chrome]},
@@ -56,5 +55,5 @@ try{
  }
  assert.equal(observations.forbiddenAttempts,0);assert.equal(observations.externalNetworkAttempts,0);assert.ok(calls.every(c=>!c.insideTransaction));checks.push('no-env-default-data-or-external-egress-and-no-native-I/O-in-transaction');
  const diagnostics=owners.providers.diagnostics();await f.close();assert.equal(owners.providers.diagnostics().activeSessions,0);assert.equal(owners.providers.diagnostics().activeCalls,0);assert.equal(u.stats.activeSockets,0);checks.push('all-original-provider-owners-drained-and-database-closed-last');
- console.log(JSON.stringify({mode,checks,evidence,diagnostics,stopEvents:f.host.status().events,observations,calls,protocol:u.stats,realExternalProvidersVerified:false,constructedLoopbackProtocol:true,constructedPreexistingMemberProof:true},null,2));
+ console.log(JSON.stringify({mode,chromiumExecutablePath:chrome,checks,evidence,diagnostics,stopEvents:f.host.status().events,observations,calls,protocol:u.stats,realExternalProvidersVerified:false,constructedLoopbackProtocol:true,constructedPreexistingMemberProof:true},null,2));
 }finally{release?.();await f?.close();await u.close();}
