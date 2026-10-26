@@ -1,0 +1,9 @@
+export function installPlatformAdminSchema(db){db.exec(`CREATE TABLE IF NOT EXISTS platform_admin_records(kind TEXT NOT NULL,id TEXT NOT NULL,platform TEXT NOT NULL,actor TEXT NOT NULL,at INTEGER NOT NULL,payload TEXT NOT NULL,PRIMARY KEY(kind,id)); CREATE INDEX IF NOT EXISTS platform_admin_recent ON platform_admin_records(kind,platform,at,id);`);}
+export class PlatformAdminRepository{
+ constructor(db){this.db=db;}
+ get(kind,id){const r=this.db.prepare('SELECT payload FROM platform_admin_records WHERE kind=? AND id=?').get(kind,id);return r?JSON.parse(r.payload):null;}
+ put(kind,id,platform,actor,at,payload){this.db.prepare('INSERT INTO platform_admin_records VALUES(?,?,?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET platform=excluded.platform,actor=excluded.actor,at=excluded.at,payload=excluded.payload').run(kind,id,platform,actor,at,JSON.stringify(payload));return payload;}
+ list(kind,platform,{before=Number.MAX_SAFE_INTEGER,limit=30}={}){return this.db.prepare('SELECT payload FROM platform_admin_records WHERE kind=? AND platform=? AND rowid<? ORDER BY rowid DESC LIMIT ?').all(kind,platform,before,limit).map(r=>JSON.parse(r.payload));}
+ page(kind,platform,{cursor='',limit=30}={}){const n=Math.min(50,Math.max(1,Number(limit)||30));const before=/^\d+$/.test(cursor)?Number(cursor):Number.MAX_SAFE_INTEGER;const rows=this.db.prepare('SELECT rowid,payload FROM platform_admin_records WHERE kind=? AND platform=? AND rowid<? ORDER BY rowid DESC LIMIT ?').all(kind,platform,before,n+1);return {items:rows.slice(0,n).map(r=>JSON.parse(r.payload)),nextCursor:rows.length>n?String(rows[n-1].rowid):null};}
+ transaction(fn){this.db.exec('BEGIN IMMEDIATE');try{const result=fn();if(result?.then)throw new Error('Async transaction forbidden');this.db.exec('COMMIT');return result;}catch(e){this.db.exec('ROLLBACK');throw e;}}
+}

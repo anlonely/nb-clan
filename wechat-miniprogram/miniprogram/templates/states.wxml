@@ -1,0 +1,2 @@
+<template name="loading"><view class="card empty-state"><text class="muted">正在加载…</text></view></template>
+<template name="error"><view class="card error-card"><text>{{errorText}}</text><button class="secondary-button small-button" bindtap="load">重新加载</button></view></template>

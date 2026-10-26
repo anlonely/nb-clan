@@ -1,0 +1,10 @@
+<view class="page launch-page">
+<text class="eyebrow">RUST SIEGE GROUP</text>
+<text class="title">一起，奔赴下一场开荒。</text>
+<text class="subtitle">战队身份 · 开荒报名 · 成员数据</text>
+<text class="muted block spaced" wx:if="{{entering}}">正在进入…</text>
+<view wx:if="{{errorText}}" class="card error-card spaced">
+<text>{{errorText}}</text>
+<button class="primary-button" bindtap="enterBase">重试</button>
+</view>
+</view>

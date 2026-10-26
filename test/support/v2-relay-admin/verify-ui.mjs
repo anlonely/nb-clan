@@ -1,0 +1,31 @@
+import { chromiumExecutablePath } from '../../../server/chromium-runtime.js';
+import '../results.mjs';
+import '../v2-source-main/offline.mjs';
+import { mkdir,readFile,writeFile,rm } from 'node:fs/promises';
+import path from 'node:path';
+import { randomUUID } from 'node:crypto';
+import assert from 'node:assert/strict';
+const {default:puppeteer}=await import('puppeteer-core');
+const {createServer:createViteServer}=await import('vite');
+const {httpFixture,tokenA,tokenB}=await import('./fixture.mjs');
+const {config,directory,root}=await import('./ui-config.mjs');
+const f=await httpFixture(),vite=await createViteServer(config()),out=path.join(root,'output/test-results/g07-relay-admin');await mkdir(out,{recursive:true});
+let actor='api_edit';f.app.get('/__fixture/session',(req,res)=>{const s=f.session(actor);res.setHeader('Set-Cookie',`nb_v2_session=${s.token}; Path=/; HttpOnly; SameSite=Lax`);res.json({accountId:actor,scopeVersion:f.actor(actor).permissionVersion,csrfToken:s.csrfToken});});
+f.app.use(vite.middlewares);f.app.get('/',async(req,res)=>res.type('html').send(await vite.transformIndexHtml('/',await readFile(path.join(directory,'index.html'),'utf8'))));
+const browser=await puppeteer.launch({executablePath:chromiumExecutablePath(),userDataDir:path.join(f.directory,'browser-profile'),headless:true,args:['--disable-background-networking','--no-first-run','--disable-component-update']});
+const page=await browser.newPage();await page.setViewport({width:1440,height:1000});await page.setRequestInterception(true);const blocked=[];page.on('request',r=>{if(r.url().startsWith(f.origin+'/')||r.url().startsWith('data:')||r.url().startsWith('blob:'))r.continue();else{blocked.push(new URL(r.url()).origin);r.abort();}});
+const errors=[],checks=[],responses=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.url().includes('/api/v2/relay-admin'))responses.push({path:new URL(r.url()).pathname,status:r.status()});});
+const text=t=>page.waitForFunction(t=>document.body.innerText.includes(t),{},t);
+const click=async label=>{await page.waitForFunction(t=>[...document.querySelectorAll('button')].some(b=>b.textContent.trim()===t&&!b.disabled),{},label);await page.evaluate(t=>[...document.querySelectorAll('button')].find(b=>b.textContent.trim()===t&&!b.disabled).click(),label);};
+const shot=name=>page.screenshot({path:path.join(out,'ui-'+name+'-1440.png'),fullPage:true});
+try{
+ await page.goto(f.origin,{waitUntil:'networkidle0'});await text('Rust+ 中继 Token');await text('未设置');await shot('initial');checks.push('lazy-page-real-G03-nonroot-API-editor');
+ await click('设置 Token');await page.type('input[aria-label="中继 Token"]',tokenA);assert.equal(await page.$eval('input[aria-label="中继 Token"]',e=>e.type),'password');await click('保存 Token');await text('Token 已更新。');await page.waitForFunction(()=>!document.querySelector('.relay-editor'));await f.verify(tokenA);assert.ok(!(await page.evaluate(()=>document.body.innerText)).includes(tokenA));checks.push('save-password-field-cleared-original-validator-accepts');await shot('saved');
+ await click('设置 Token');await page.type('input[aria-label="中继 Token"]',tokenB);await f.service.command(f.actor('api_edit'),'save',{expectedRevision:f.revision('api_edit'),token:tokenA+'-concurrent'},randomUUID());await click('保存 Token');await text('配置已发生变化');assert.equal(await page.$eval('input[aria-label="中继 Token"]',e=>e.value),'');checks.push('revision-conflict-does-not-rebase-form');
+ await click('取消');await click('重新读取');await page.waitForFunction(()=>![...document.querySelectorAll('button')].find(b=>b.textContent==='重新读取').disabled);await click('设置 Token');await page.type('input[aria-label="中继 Token"]',tokenB);f.hooks.beforeCache=()=>{throw Error('fixture-cache-down');};await click('保存 Token');await text('操作结果待核对');assert.ok(!(await page.evaluate(()=>JSON.stringify({...sessionStorage}))).includes(tokenB));await shot('unknown');checks.push('committed-cache-failure-secret-free-journal');
+ await page.reload({waitUntil:'networkidle0'});await text('操作结果待核对');f.hooks.beforeCache=null;const hashes=f.counters().hashes;await click('核对并恢复操作');await text('Token 已更新。');assert.equal(f.counters().hashes,hashes);await f.verify(tokenB);await assert.rejects(f.verify(tokenA),{status:401});checks.push('reload-recovery-ID-only-no-rehash');
+ await click('清除 Token');await click('确认清除');await text('Token 已清除。');await assert.rejects(f.verify(tokenB),{status:403});checks.push('clear-invalidates-primed-cache');
+ actor='api_view';await page.reload({waitUntil:'networkidle0'});await text('当前账号可查看此配置');assert.equal(await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='设置 Token').disabled),true);await shot('readonly');checks.push('legacy-api-view-only-no-edit');
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.deepEqual(errors,[]);assert.deepEqual(blocked,[]);
+ await writeFile(path.join(out,'ui-verification.json'),JSON.stringify({viewport:{width:1440,height:1000},browser:'Isolated Chrome headless on macOS',checks,responses,pageErrors:errors,blockedOrigins:blocked,mobileTested:false,externalPlatformTested:false},null,2)+'\n');console.log(JSON.stringify({checks:checks.length,pageErrors:errors.length}));
+}finally{await browser.close();await vite.close();await f.close();await rm(path.join(directory,'.runtime/vite-cache'),{recursive:true,force:true});}

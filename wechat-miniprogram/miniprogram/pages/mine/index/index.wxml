@@ -1,0 +1,78 @@
+<import src="../../../templates/states.wxml"/>
+<view class="page">
+<view class="page-header">
+<text class="eyebrow">我的战队名片</text>
+<text class="title">个人信息</text>
+<text class="subtitle">账号、专长与最近的开荒足迹。</text>
+</view>
+<view class="card">
+<view class="row">
+<image class="avatar large" wx:if="{{wechatAvatar}}" src="{{wechatAvatar}}" mode="aspectFill"/>
+<view wx:else class="avatar large avatar-placeholder">我</view>
+<view class="grow">
+<text class="member-name">{{wechat.nickName}}</text>
+<text class="muted block">微信资料</text>
+</view>
+<button class="secondary-button small-button" bindtap="editWechat">编辑</button>
+</view>
+</view>
+<template wx:if="{{errorText}}" is="error" data="{{errorText}}"/>
+<template wx:if="{{loading}}" is="loading"/>
+<block>
+<view class="card">
+<text class="section-title">Steam 信息</text>
+<view class="row">
+<image wx:if="{{member.avatar}}" class="avatar" src="{{member.avatar}}" mode="aspectFill"/>
+<view class="grow">
+<text class="member-name">{{member.steamNickname || member.name}}</text>
+<text class="muted block small" selectable="true">{{member.steamId}}</text>
+</view>
+</view>
+<view class="divider"/>
+<text class="label">个人专长</text>
+<view class="tags" wx:if="{{member.specialtyTags.length}}">
+<text class="pill tag-pill tone-{{item.tone}}" wx:for="{{member.specialtyTags}}" wx:key="id">{{item.label}}</text>
+</view>
+<text class="muted" wx:else>暂无专长</text>
+<view class="meta-item spaced">
+<text class="label">Rust 游戏总时长</text>
+<text class="meta-value">{{member.rustTotalText}}</text>
+</view>
+</view>
+<view class="card">
+<text class="section-title">官服数据</text>
+<text class="notice warning block" wx:if="{{member.officialStale}}">当前为已采集的历史数据，等待同步更新。</text>
+<view class="meta-grid spaced" wx:if="{{member.officialAvailable}}">
+<view class="meta-item" wx:for="{{member.officialRows}}" wx:key="key">
+<text class="label">{{item.label}}</text>
+<text class="meta-value">{{item.value}}</text>
+</view>
+</view>
+<text wx:else class="muted">暂无官服数据。</text>
+<text wx:if="{{member.officialUpdatedAt}}" class="muted block small spaced">更新于 {{member.officialUpdatedAt}}</text>
+</view>
+<view class="card">
+<text class="section-title">正在参加的服务器</text>
+<view class="list-item" wx:for="{{member.currentServers}}" wx:key="wipeId">
+<text class="record-title">{{item.name}}</text>
+<text class="muted block">{{item.title}}</text>
+<text class="muted block small">开荒 {{item.startsAtText}}</text>
+</view>
+<text wx:if="{{!member.currentServers.length}}" class="muted">暂未参加当前开荒档期。</text>
+</view>
+<view class="card">
+<text class="section-title">最近 3 次开荒</text>
+<text class="muted block small" style="margin-bottom:20rpx">已结束档期的参加报名记录</text>
+<view class="list-item" wx:for="{{member.recentWipes}}" wx:key="id">
+<view class="row-between">
+<text class="record-title">{{item.title}}</text>
+<text class="pill neutral">{{item.responseText}}</text>
+</view>
+<text class="muted block">{{item.serverName}}</text>
+<text class="muted block small">开荒 {{item.startsAtText}}</text>
+<text class="muted block small">结束 {{item.endedAtText}}</text>
+</view>
+<text wx:if="{{!member.recentWipes.length}}" class="muted">还没有已结束的参加记录。</text>
+</view>
+</block>
+</view>

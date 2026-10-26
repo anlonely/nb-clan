@@ -1,0 +1,13 @@
+.v2-admin .wipe-dates{margin:4px 0 24px}
+.v2-admin .wipe-dates>header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:10px;font-size:13px;font-weight:600}
+.v2-admin .wipe-dates-zone{color:var(--muted);font-size:12px;font-weight:400}
+.v2-admin .wipe-dates-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.v2-admin .wipe-date-card{border:1px solid var(--border);border-radius:12px;padding:18px 20px;background:var(--subtle)}
+.v2-admin .wipe-date-next{background:var(--soft);border-color:color-mix(in srgb,var(--accent) 28%,var(--border))}
+.v2-admin .wipe-date-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px;margin-bottom:16px}
+.v2-admin .wipe-date-source{font-size:10px;line-height:1.5;padding:3px 7px;background:var(--surface);border:1px solid var(--border);border-radius:5px;white-space:nowrap}
+.v2-admin .wipe-date-card time{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.v2-admin .wipe-date-day{font-size:16px;letter-spacing:.025em}
+.v2-admin .wipe-date-clock{font-size:28px;line-height:1.15;font-weight:600;letter-spacing:-.04em}
+.v2-admin .wipe-date-next .wipe-date-clock{color:var(--accent)}
+.v2-admin .wipe-date-empty{display:block;color:var(--muted);font-size:16px;min-height:32px}

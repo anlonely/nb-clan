@@ -1,0 +1,20 @@
+.platform-admin .platform-area-tabs,.platform-admin .platform-module-heading,.platform-admin .login-policy-overview,.platform-admin .wechat-section-heading{flex-wrap:wrap}
+.platform-admin .platform-area-tabs button{white-space:normal;text-align:center}
+.platform-admin .platform-module-heading>div,.platform-admin .wechat-section-heading>div,.platform-admin .login-policy-overview>div{min-width:0}
+.platform-admin .platform-module-heading h2,.platform-admin .wechat-section-heading h2,.platform-admin .login-policy-match{overflow-wrap:anywhere}
+.platform-admin .platform-fields input,.platform-admin .platform-fields textarea{min-width:0}
+.platform-admin .v2-select-trigger>span{white-space:normal;overflow-wrap:anywhere}
+.platform-admin .button{white-space:normal;overflow-wrap:anywhere}
+.platform-admin .button svg{flex-shrink:0}
+.platform-admin .platform-actions code,.platform-admin .platform-result,.platform-admin .platform-result p{overflow-wrap:anywhere}
+.platform-admin .platform-history-pagination{flex-wrap:wrap}
+.platform-admin .platform-history-pagination span{white-space:normal;text-align:center}
+@media(max-width:900px){.platform-admin .login-role-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+ .platform-admin .platform-area-tabs button{flex:1 1 100%}
+ .platform-admin .login-role-options,.platform-admin .platform-steam-facts{grid-template-columns:1fr}
+ .platform-admin .platform-module-heading{align-items:flex-start}
+ .platform-admin .login-policy-overview{align-items:flex-start}
+ .platform-admin .login-policy-server{max-width:100%}
+ .platform-admin .platform-tabs a{padding:10px 12px}
+}

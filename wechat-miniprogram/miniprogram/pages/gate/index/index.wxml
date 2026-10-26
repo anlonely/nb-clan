@@ -1,0 +1,40 @@
+<view class="page">
+<view class="page-header">
+<text class="eyebrow">RUST SIEGE GROUP</text>
+<text class="title">先认识一下</text>
+<view class="subtitle">
+<text class="block">选择头像、填写昵称后即可进入。</text>
+<text class="block">进入后可关联你的战队账号。</text>
+</view>
+</view>
+<view class="card">
+<text class="section-title">微信资料</text>
+<text class="muted block">头像和昵称由你主动选择，用于小程序内的个人展示。</text>
+<view class="row spaced">
+<button class="avatar-button" open-type="chooseAvatar" bindchooseavatar="chooseAvatar" disabled="{{!privacyReady || saving || loading}}">
+<image wx:if="{{avatarUrl}}" src="{{avatarUrl}}" mode="aspectFill"/>
+<text wx:else>选择头像</text>
+</button>
+<view class="grow">
+<input class="input" type="nickname" value="{{nickName}}" bindinput="nicknameInput" bindblur="nicknameInput" maxlength="32" placeholder="选择或填写昵称" disabled="{{!privacyReady || saving || loading}}"/>
+</view>
+</view>
+<button wx:if="{{!privacyReady}}" class="secondary-button" bindtap="showPrivacy">阅读并同意隐私指引</button>
+<button class="primary-button" bindtap="save" loading="{{saving || loading}}" disabled="{{saving || loading || !privacyReady}}">{{editing ? '保存资料' : '保存并进入'}}</button>
+</view>
+<view class="card error-card" wx:if="{{errorText}}">
+<text>{{errorText}}</text>
+<button class="secondary-button" bindtap="load">重新加载</button>
+</view>
+<view class="privacy-mask" wx:if="{{showPrivacy}}">
+<view class="privacy-dialog">
+<text class="section-title">个人信息保护</text>
+<text class="muted">我们使用你主动提供的头像、昵称设置个人资料。选择图片时会使用你选中的图片。请阅读并同意</text>
+<text class="privacy-link" bindtap="openPrivacy">{{privacyContractName}}</text>
+<view class="button-row">
+<button class="secondary-button" bindtap="rejectPrivacy">暂不同意</button>
+<button id="privacy-agree" class="primary-button" open-type="agreePrivacyAuthorization" bindagreeprivacyauthorization="agreePrivacy">同意并继续</button>
+</view>
+</view>
+</view>
+</view>

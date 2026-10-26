@@ -1,0 +1,122 @@
+// Shared Atlas presets, extracted unchanged from the legacy wipe catalog.
+export const ATLAS_EU_2X_SERVER_PRESETS = [
+  {
+    id: 'atlas-eu-2x-monthly',
+    name: 'Atlas - EU 2X Monthly Large',
+    provider: 'atlas',
+    atlasId: '2',
+    atlasAlias: '2xmonthly.atlasrust.uk',
+    atlasRegion: 'EU',
+    atlasQueryPort: 28015,
+    serverVipProvider: 'atlas',
+    kdaProvider: 'manual',
+    battlemetricsId: '16741517',
+    schedule: 'monthly_force',
+    wipeTimeZone: 'Europe/London',
+    wipeHourLocal: 19,
+    wipeMinuteLocal: 0,
+    directConnect: 'client.connect 2xmonthly.atlasrust.uk:28010',
+    vipUrl: 'https://store.atlasrust.com/store/'
+  },
+  {
+    id: 'atlas-eu-2x-medium',
+    name: 'Atlas - EU 2X Medium',
+    provider: 'atlas',
+    atlasId: '10',
+    atlasAlias: '2xmedium.atlasrust.uk',
+    atlasRegion: 'EU',
+    atlasQueryPort: 28015,
+    serverVipProvider: 'atlas',
+    kdaProvider: 'manual',
+    battlemetricsId: '15295909',
+    schedule: 'monthly_weeks',
+    wipeTimeZone: 'Europe/London',
+    wipeWeeks: [1, 3, 5],
+    wipeHoursLocalByWeek: { 1: 19, 3: 17, 5: 17 },
+    wipeMinuteLocal: 0,
+    directConnect: 'client.connect 2xmedium.atlasrust.uk:28010',
+    vipUrl: 'https://store.atlasrust.com/store/'
+  },
+  {
+    id: 'atlas-eu-2x-monthly-quad',
+    name: 'Atlas - EU 2X Monthly Solo/Duo/Trio/Quad',
+    provider: 'atlas',
+    atlasId: '8',
+    atlasAlias: '2xmonthlyquad.atlasrust.uk',
+    atlasRegion: 'EU',
+    atlasQueryPort: 28015,
+    serverVipProvider: 'atlas',
+    kdaProvider: 'manual',
+    battlemetricsId: '30643199',
+    schedule: 'monthly_force',
+    wipeTimeZone: 'Europe/London',
+    wipeHourLocal: 19,
+    wipeMinuteLocal: 0,
+    directConnect: 'client.connect 2xmonthlyquad.atlasrust.uk:28010',
+    vipUrl: 'https://store.atlasrust.com/store/'
+  }
+];
+
+// NA is the region code returned by the Atlas official server catalog.
+export const ATLAS_US_2X_SERVER_PRESETS = [
+  {
+    id: 'atlas-us-2x-monthly',
+    name: 'Atlas - US 2X Monthly Large',
+    provider: 'atlas',
+    atlasId: '6',
+    atlasAlias: '2xmonthly.atlasrust.us',
+    atlasRegion: 'NA',
+    atlasQueryPort: 28015,
+    serverVipProvider: 'atlas',
+    kdaProvider: 'manual',
+    schedule: 'monthly_force_with_intermediate',
+    wipeTimeZone: 'America/New_York',
+    wipeHourLocal: 14,
+    wipeMinuteLocal: 0,
+    intermediateWipeHourLocal: 17,
+    intermediateWipeMinuteLocal: 0,
+    intermediateWeeksBeforeForce: [1],
+    directConnect: 'client.connect 2xmonthly.atlasrust.us:28010',
+    vipUrl: 'https://store.atlasrust.com/store/'
+  },
+  {
+    id: 'atlas-us-2x-medium',
+    name: 'Atlas - US 2X Medium',
+    provider: 'atlas',
+    atlasId: '33',
+    atlasAlias: '2xmedium.atlasrust.us',
+    atlasRegion: 'NA',
+    atlasQueryPort: 28015,
+    serverVipProvider: 'atlas',
+    kdaProvider: 'manual',
+    schedule: 'monthly_weeks',
+    wipeTimeZone: 'America/New_York',
+    wipeWeeks: [1, 3, 5],
+    wipeHoursLocalByWeek: { 1: 14, 3: 17, 5: 17 },
+    wipeMinuteLocal: 0,
+    directConnect: 'client.connect 2xmedium.atlasrust.us:28010',
+    vipUrl: 'https://store.atlasrust.com/store/'
+  },
+  {
+    id: 'atlas-us-2x-monthly-quad',
+    name: 'Atlas - US 2X Monthly Solo/Duo/Trio/Quad',
+    provider: 'atlas',
+    atlasId: '27',
+    atlasAlias: '2xmonthlyquad.atlasrust.us',
+    atlasRegion: 'NA',
+    atlasQueryPort: 28015,
+    serverVipProvider: 'atlas',
+    kdaProvider: 'manual',
+    schedule: 'monthly_force_with_intermediate',
+    wipeTimeZone: 'America/New_York',
+    wipeHourLocal: 14,
+    wipeMinuteLocal: 0,
+    intermediateWipeHourLocal: 17,
+    intermediateWipeMinuteLocal: 0,
+    intermediateWeeksBeforeForce: [1],
+    directConnect: 'client.connect 2xmonthlyquad.atlasrust.us:28010',
+    vipUrl: 'https://store.atlasrust.com/store/'
+  }
+];
+
+export const ATLAS_2X_SERVER_PRESETS = [...ATLAS_EU_2X_SERVER_PRESETS, ...ATLAS_US_2X_SERVER_PRESETS];

@@ -1,0 +1,273 @@
+# Current-file release scanning. All upstream rules remain enabled.
+# Exceptions require BOTH a reviewed file and exact known non-secret content.
+# Do not add directory-wide exclusions or real credentials here.
+title = "NB Clan public source"
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated manifest SHA-256 digests, not API tokens"
+targetRules = ["generic-api-key", "discord-api-token"]
+condition = "AND"
+paths = ['''(?:^|/)PUBLIC-RELEASE-MANIFEST\.json$''']
+regexTarget = "secret"
+regexes = ['''^[a-f0-9]{64}$''']
+
+[[allowlists]]
+description = "Translation label or message identifier misread as Discord secret"
+targetRules = ["discord-client-secret"]
+condition = "AND"
+paths = ['''(?:^|/)server/api\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^wipeAttendanceCommandDescription$''',
+]
+
+[[allowlists]]
+description = "Translation label or message identifier misread as Discord secret"
+targetRules = ["discord-client-secret"]
+condition = "AND"
+paths = ['''(?:^|/)src/i18n/copy\-data/en\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^discordMemberApplicationFeedback$''',
+  '''^discordMemberApplicationNeedMore$''',
+  '''^riskRuleDefaultAccountRestricted$''',
+  '''^rustplusRelayForwardPlatformKook$''',
+]
+
+[[allowlists]]
+description = "Translation label or message identifier misread as Discord secret"
+targetRules = ["discord-client-secret"]
+condition = "AND"
+paths = ['''(?:^|/)src/i18n/copy\-data/ko\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^rustplusRelayForwardPlatformKook$''',
+]
+
+[[allowlists]]
+description = "Translation label or message identifier misread as Discord secret"
+targetRules = ["discord-client-secret"]
+condition = "AND"
+paths = ['''(?:^|/)src/i18n/copy\-data/ru\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^rustplusRelayForwardPlatformKook$''',
+]
+
+[[allowlists]]
+description = "Translation label or message identifier misread as Discord secret"
+targetRules = ["discord-client-secret"]
+condition = "AND"
+paths = ['''(?:^|/)src/i18n/copy\-data/th\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^discordMemberApplicationFeedback$''',
+  '''^rustplusRelayForwardPlatformKook$''',
+]
+
+[[allowlists]]
+description = "Translation label or message identifier misread as Discord secret"
+targetRules = ["discord-client-secret"]
+condition = "AND"
+paths = ['''(?:^|/)src/i18n/copy\-data/tr\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^rustplusRelayForwardPlatformKook$''',
+]
+
+[[allowlists]]
+description = "Translation label or message identifier misread as Discord secret"
+targetRules = ["discord-client-secret"]
+condition = "AND"
+paths = ['''(?:^|/)src/i18n/copy\-data/zh\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^rustplusRelayForwardPlatformKook$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["discord-client-id"]
+condition = "AND"
+paths = ['''(?:^|/)test/api\-workflow\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^123456789012345671$''',
+  '''^123456789012345674$''',
+  '''^123456789012345675$''',
+  '''^123456789012345676$''',
+  '''^123456789012345677$''',
+  '''^123456789012345679$''',
+  '''^123456789012345681$''',
+  '''^123456789012345682$''',
+  '''^123456789012345683$''',
+  '''^123456789012345686$''',
+  '''^123456789012345687$''',
+  '''^123456789012345688$''',
+  '''^123456789012345690$''',
+  '''^123456789012345691$''',
+  '''^123456789012345692$''',
+  '''^123456789012345693$''',
+  '''^123456789012345694$''',
+  '''^123456789012345695$''',
+  '''^123456789012345696$''',
+  '''^123456789012345699$''',
+  '''^123456789012345706$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''(?:^|/)test/api\-workflow\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^bm_second_key_12345678901234567890$''',
+  '''^bm_test_key_12345678901234567890$''',
+  '''^kook_encrypt_key_1234567890$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["discord-client-secret"]
+condition = "AND"
+paths = ['''(?:^|/)test/discord\-card\-timezones\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^buildRustplusRelayDiscordMessage$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''(?:^|/)test/discord\-kook\-bridge\-content\-image\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^translation_key_1234567890$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["discord-client-id"]
+condition = "AND"
+paths = ['''(?:^|/)test/discord\-kook\-bridge\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^123456789012345678$''',
+  '''^123456789012345679$''',
+  '''^123456789012345680$''',
+  '''^123456789012345681$''',
+  '''^123456789012345682$''',
+  '''^123456789012345683$''',
+  '''^123456789012345684$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''(?:^|/)test/discord\-kook\-bridge\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^translation_key_1234567890$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["discord-client-id"]
+condition = "AND"
+paths = ['''(?:^|/)test/discord\-review\-sqlite\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^123456789012345798$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["discord-client-secret"]
+condition = "AND"
+paths = ['''(?:^|/)test/discord\-review\-sqlite\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^sqlite_discord_user_direct_patch$''',
+  '''^sqlite_discord_user_edit_limited$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''(?:^|/)test/operation\-runs\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^bm_api_key_operation_runs_1234567890$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''(?:^|/)test/rustplus\-relay\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^bm_api_key_12345678901234567890$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["discord-client-id"]
+condition = "AND"
+paths = ['''(?:^|/)test/sqlite\-storage\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^123456789012345681$''',
+  '''^123456789012345682$''',
+  '''^123456789012345683$''',
+  '''^123456789012349989$''',
+  '''^123456789012349990$''',
+  '''^123456789012349991$''',
+  '''^123456789012349994$''',
+  '''^123456789012349995$''',
+  '''^123456789012349996$''',
+  '''^123456789012349997$''',
+  '''^123456789012349998$''',
+  '''^123456789012349999$''',
+  '''^123456789012390002$''',
+  '''^123456789012391002$''',
+  '''^123456789012391003$''',
+  '''^123456789012392002$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["discord-client-id"]
+condition = "AND"
+paths = ['''(?:^|/)test/v2\-bot\-open\-signups\-ui\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^977082574801350667$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["discord-client-id"]
+condition = "AND"
+paths = ['''(?:^|/)test/v2\-discord\-member\-sync\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^123456789012345678$''',
+]
+
+[[allowlists]]
+description = "Known synthetic test fixture or public numeric application ID"
+targetRules = ["discord-client-id"]
+condition = "AND"
+paths = ['''(?:^|/)test/v2\-notification\-platforms\-renderer\.test\.js$''']
+regexTarget = "secret"
+regexes = [
+  '''^123456789012345678$''',
+  '''^977082574801350667$''',
+]

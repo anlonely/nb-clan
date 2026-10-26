@@ -1,0 +1,21 @@
+import '../results.mjs';
+import '../v2-baseline/loopback-only.mjs';
+import assert from 'node:assert/strict';import {readFile,writeFile} from 'node:fs/promises';import {randomUUID} from 'node:crypto';
+const runtime=JSON.parse(await readFile(process.argv[2],'utf8')),origin=runtime.origin,cookies=new Map(),checks=[];let csrf;
+async function call(path,{method='GET',body,headers={}}={}){const r=await fetch(origin+path,{method,redirect:'manual',headers:{cookie:[...cookies].map(([k,v])=>`${k}=${v}`).join('; '),...(body?{'content-type':'application/json'}:{}),...headers},body:body?JSON.stringify(body):undefined});for(const c of r.headers.getSetCookie()){const [k,v]=c.split(';')[0].split('=');cookies.set(k,v);}return r;}
+let r=await call('/api/v2/sync-center/jobs');assert.equal(r.status,401);checks.push('unauthenticated-401');
+r=await call('/api/v2/auth/discord/start?returnTo=/admin/sync/data');r=await call(new URL(r.headers.get('location')).pathname+new URL(r.headers.get('location')).search);const html=await r.text(),href=html.match(/href="([^"]+)">admin/)[1];r=await call(new URL(href).pathname+new URL(href).search);assert.equal(r.status,303);const finish=new URL(r.headers.get('location'));r=await call(finish.pathname+finish.search);assert.equal(r.status,303);
+r=await call('/api/v2/auth/me');const me=await r.json();assert.equal(r.status,200);csrf=me.data.csrfToken;checks.push('real-G03-OAuth-cookie-session');
+const input={type:'kda',scope:{kind:'members',memberIds:['g05_alpha']}},key=randomUUID();
+r=await call('/api/v2/sync-center/jobs',{method:'POST',body:input,headers:{'Idempotency-Key':key}});assert.equal(r.status,403);checks.push('CSRF-rejected');
+const write=(path,body,id=randomUUID())=>call('/api/v2/sync-center'+path,{method:'POST',body,headers:{origin,'X-CSRF-Token':csrf,'Idempotency-Key':id}});
+r=await write('/jobs',input,key);assert.equal(r.status,202);const created=(await r.json()).data;assert.equal(created.job.counts.total,1);checks.push('real-job-created-202');
+r=await write('/jobs',input,key);assert.equal((await r.json()).data.job.id,created.job.id);checks.push('stable-HTTP-receipt');
+r=await write('/jobs',{...input,type:'member_profile'},key);assert.equal(r.status,409);checks.push('idempotency-body-conflict');
+r=await call(`/api/v2/sync-center/jobs/${created.job.id}`);assert.equal(r.status,200);const j=(await r.json()).data;
+r=await write(`/jobs/${j.id}/commands/cancel`,{expectedRevision:0});assert.equal(r.status,409);checks.push('HTTP-revision-conflict');
+r=await write('/rules',{expectedRevision:0,name:'HTTP 隔离自动计划',type:'member_profile',scope:input.scope,intervalMinutes:5,enabled:false});assert.equal(r.status,201);const rule=(await r.json()).data.rule;
+r=await write(`/rules/${rule.id}`,{expectedRevision:rule.revision,delete:true});assert.equal(r.status,200);checks.push('automatic-plan-create-delete');
+r=await call('/api/v2/sync-center/coverage');assert.equal(r.status,200);checks.push('coverage-authority-read');
+r=await call('/api/v2/sync-center/sources');assert.equal(r.status,200);assert.equal((await r.json()).data.items.length,5);checks.push('five-source-schedulers-seven-job-types');
+await writeFile('output/test-results/g07-sync/http.json',JSON.stringify({origin,checks,passed:checks.length,platform:'constructed identity and collector',backend:'real G03/G07 SQLite HTTP'},null,2));console.log(checks);

@@ -1,0 +1,8 @@
+/* 覆盖微信按钮默认固定宽度，长文案换行时保持正常行距。 */
+.page .primary-button,.page .secondary-button:not(.small-button){width:100%;max-width:100%;height:auto;line-height:1.5;padding:22rpx 24rpx;white-space:normal;word-break:break-all}
+.identity-summary{margin-top:20rpx;align-items:center}
+.identity-summary .grow{min-width:0}
+.identity-summary .member-name{white-space:normal;overflow-wrap:anywhere}
+.community-avatar{border-radius:22rpx}
+.identity-avatar-placeholder{display:flex;flex-shrink:0;align-items:center;justify-content:center;background:#eef2f7;color:#64748b;font-size:38rpx;font-weight:600}
+.identity-role-label{display:block;margin-top:26rpx;font-size:24rpx;color:#64748b}

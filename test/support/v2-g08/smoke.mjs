@@ -1,0 +1,8 @@
+import '../results.mjs';
+import fs from 'node:fs/promises';import path from 'node:path';import {randomUUID} from 'node:crypto';import {performance} from 'node:perf_hooks';import {createQueryClient} from '../../../src/v2/query-client.js';import {startBackend,api} from './host.mjs';
+const ev=path.resolve('output/test-results/g08'),directory=path.resolve('work/v2-g08/nb-v2-candidate-smoke-'+randomUUID());await fs.mkdir(path.dirname(directory),{recursive:true});let backend;const report={scope:'one tiny loopback sampler readiness probe, not performance acceptance',checks:[]};
+try{backend=await startBackend({directory,scale:1,cursorCount:100,log:ev+'/sampler-smoke.log'});report.owners=backend.ready.owners;report.fixture=backend.ready.fixture;
+ for(const route of ['/me/home','/wipes/fixture_wipe_0/summary','/wipes/fixture_wipe_0/signups?limit=50','/member-admin/members?limit=50','/stats/rows?wipeId=fixture_wipe_0&sourceId=vital&metricVersion=nb-kda-1&limit=50','/realtime/g08-0/chats?limit=50']){const t=performance.now(),r=await api(backend,route);report.checks.push({route,status:r.status,bytes:r.bytes,elapsedMs:performance.now()-t,error:r.body?.error,shape:r.body?.data?Object.keys(r.body.data):null});}
+ const q=createQueryClient({fetchImpl:async()=>new Response(JSON.stringify({data:{incompatible:'accepted'},meta:{schemaVersion:999}}))});try{report.schemaProbe={accepted:await q.request('/api/v2/me/home')};}catch(e){report.schemaProbe={error:e.errorCode};}finally{q.dispose();}
+ report.metrics=await backend.control('metrics');
+}catch(e){report.failure=e.stack;process.exitCode=1;}finally{report.shutdown=await backend?.stop();await fs.writeFile(ev+'/sampler-smoke.json',JSON.stringify(report,null,2)+'\n');}console.log(JSON.stringify(report));

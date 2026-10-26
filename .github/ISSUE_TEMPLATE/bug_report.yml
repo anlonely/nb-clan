@@ -1,0 +1,25 @@
+name: 缺陷报告 / Bug report
+description: 报告可以复现的功能问题
+body:
+  - type: markdown
+    attributes:
+      value: 请勿提交账号、令牌、Cookie、数据库或带成员信息的截图；安全漏洞请使用 SECURITY.md 中的私密报告方式。
+  - type: input
+    id: version
+    attributes:
+      label: 版本和运行环境
+      placeholder: 发布标签或 commit、Node 版本、Docker/本机、系统
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 使用虚构数据说明操作、预期结果和实际结果。
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 脱敏后的日志
+      render: text

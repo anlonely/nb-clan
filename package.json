@@ -1,0 +1,53 @@
+{
+  "name": "nb-clan-member-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "init": "node scripts/setup.mjs",
+    "dev": "concurrently -k -n api,web -c cyan,magenta \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "node --watch scripts/start.mjs --dev",
+    "dev:web": "vite --host 127.0.0.1",
+    "start": "node scripts/start.mjs",
+    "build": "vite build",
+    "test": "node scripts/test.mjs all",
+    "sqlite:migrate": "node scripts/sqlite-migrate-store.js --source data/store.json --target data/nb-clan.sqlite --mode apply",
+    "sqlite:verify": "node scripts/sqlite-verify-store.js --source data/store.json --target data/nb-clan.sqlite",
+    "sqlite:integrity": "node scripts/sqlite-integrity-check.js --sqlite data/nb-clan.sqlite",
+    "sqlite:index-check": "node scripts/sqlite-index-check.js --sqlite data/nb-clan.sqlite",
+    "sqlite:backup": "node scripts/sqlite-backup.js --sqlite data/nb-clan.sqlite",
+    "setup": "node scripts/setup.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "test:unit": "node scripts/test.mjs unit",
+    "test:core": "node scripts/test.mjs core",
+    "test:integration": "node scripts/test.mjs integration",
+    "test:migration": "node scripts/test.mjs migration",
+    "test:browser": "node scripts/test.mjs browser",
+    "test:mini": "node scripts/test.mjs mini",
+    "check:release": "node scripts/check-public-release.mjs"
+  },
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "express": "^5.2.1",
+    "https-proxy-agent": "^7.0.6",
+    "jszip": "^3.10.1",
+    "node-fetch": "^3.3.2",
+    "puppeteer-core": "^25.1.0",
+    "qrcode": "^1.5.4",
+    "socks-proxy-agent": "^8.0.5",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.1",
+    "concurrently": "^10.0.3",
+    "lucide-react": "^0.562.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "vite": "^7.3.6"
+  },
+  "license": "AGPL-3.0-only",
+  "engines": {
+    "node": ">=22.23.1 <23"
+  },
+  "description": "Self-hosted Rust clan membership, scheduling and community management"
+}

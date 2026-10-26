@@ -1,0 +1,142 @@
+<import src="../../../templates/states.wxml"/>
+<view class="page">
+<view class="page-header">
+<text class="eyebrow">下一场，一起出发</text>
+<text class="title">开荒报名</text>
+<text class="subtitle">确认安排，选择你的到场方式。</text>
+</view>
+<template wx:if="{{errorText}}" is="error" data="{{errorText}}"/>
+<template wx:if="{{loading}}" is="loading"/>
+<block>
+<view class="card empty-state" wx:if="{{!items.length && !loading && !errorText}}">
+<text class="muted">当前没有可查看的开荒档期。</text>
+</view>
+<block wx:if="{{current}}">
+<view class="card">
+<text class="label">选择开荒档期</text>
+<picker range="{{items}}" range-key="title" value="{{selectedIndex}}" bindchange="selectWipe" disabled="{{submitting || loading}}">
+<view class="picker">{{current.title}}</view>
+</picker>
+<view class="tags">
+<text class="pill">{{current.lifecycleText}}</text>
+<text class="pill neutral">{{current.windowText}}</text>
+</view>
+<view class="divider"/>
+<text class="section-title">{{current.serverName || '服务器待公布'}}</text>
+<view class="meta-grid">
+<view class="meta-item">
+<text class="label">开荒时间</text>
+<text class="meta-value">{{current.startsAtText}}</text>
+</view>
+<view class="meta-item">
+<text class="label">报名截止</text>
+<text class="meta-value">{{current.closesAtText}}</text>
+</view>
+</view>
+<text class="muted block small spaced">以上时间均为北京时间。</text>
+<view class="server-info">
+<view class="server-info-content"><text class="label">服务器直连</text><text class="server-info-value {{!current.connectCommand ? 'muted' : ''}}">{{current.connectCommand || '暂未配置'}}</text></view>
+<button class="secondary-button small-button server-info-copy" data-field="connectCommand" bindtap="copyServerInfo" disabled="{{!current.connectCommand}}">复制</button>
+</view>
+<view class="server-info">
+<view class="server-info-content"><text class="label">服务器地图</text><text class="server-info-value {{!current.mapUrl ? 'muted' : ''}}">{{current.mapUrl || '暂未配置'}}</text></view>
+<button class="secondary-button small-button server-info-copy" data-field="mapUrl" bindtap="copyServerInfo" disabled="{{!current.mapUrl}}">复制</button>
+</view>
+</view>
+<view class="card">
+<view class="row-between">
+<text class="section-title">我的报名</text>
+<text class="pill success">{{current.signupText}}</text>
+</view>
+<text class="muted block" wx:if="{{current.arrivalText}}">预计到达：{{current.arrivalText}}</text>
+<text class="notice block" wx:if="{{resultText}}">{{resultText}}</text>
+<block wx:if="{{current.canSignup}}">
+<view class="button-row">
+<button class="primary-button" data-response="attending_on_time" bindtap="signup" disabled="{{submitting || loading}}" loading="{{submitting}}">准时参加</button>
+<button class="secondary-button" data-response="not_attending" bindtap="signup" disabled="{{submitting || loading}}">不参加</button>
+</view>
+<view class="divider"/>
+<text class="section-title">晚点参加</text>
+<text class="muted">选择预计到达时间，方便队伍安排。</text>
+<view class="button-row">
+<picker class="grow" mode="date" value="{{arrivalDate}}" bindchange="arrivalDate" disabled="{{submitting}}">
+<view class="picker">{{arrivalDate}}</view>
+</picker>
+<picker class="grow" mode="time" value="{{arrivalTime}}" bindchange="arrivalTime" disabled="{{submitting}}">
+<view class="picker">{{arrivalTime}}</view>
+</picker>
+</view>
+<button class="secondary-button" data-response="attending_later" bindtap="signup" disabled="{{submitting || loading}}">确认晚点参加</button>
+</block>
+<text wx:else class="muted block">{{current.windowText}}，当前不能修改报名。</text>
+</view>
+<view class="card">
+<view class="row-between roster-heading">
+<text class="section-title">报名统计与名单</text>
+<button class="secondary-button small-button roster-refresh" bindtap="refreshParticipants" loading="{{participantsLoading}}" disabled="{{participantsLoading || submitting}}">{{participantsLoading ? '' : '刷新'}}</button>
+</view>
+<block wx:if="{{participantCounts}}">
+<view class="meta-grid roster-counts" wx:if="{{participantRegionCounts}}">
+<view class="meta-item"><text class="label">CN 参加人数</text><text class="meta-value">{{participantRegionCounts.cn}}</text></view>
+<view class="meta-item"><text class="label">EU 参加人数</text><text class="meta-value">{{participantRegionCounts.eu}}</text></view>
+</view>
+<text class="muted block small spaced" wx:if="{{participantRegionCounts.unknown}}">其他 / 未分队参加：{{participantRegionCounts.unknown}} 人</text>
+<view class="meta-grid roster-counts">
+<view class="meta-item"><text class="label">准时参加</text><text class="meta-value">{{participantCounts.onTime}}</text></view>
+<view class="meta-item"><text class="label">晚点参加</text><text class="meta-value">{{participantCounts.later}}</text></view>
+<view class="meta-item"><text class="label">不参加</text><text class="meta-value">{{participantCounts.notAttending}}</text></view>
+<view class="meta-item"><text class="label">未报名</text><text class="meta-value">{{participantCounts.unanswered}}</text></view>
+</view>
+<text class="muted block small spaced">已回复 {{participantCounts.responseTotal}} / {{participantCounts.eligibleTotal}} 人，已确认参加 {{participantCounts.confirmedAttending}} 人。</text>
+<view class="divider"/>
+<view class="list-item participant-row" wx:for="{{participantItems}}" wx:key="memberId" data-member-id="{{item.memberId}}" bindtap="openParticipant" hover-class="participant-row-hover">
+<view class="row">
+<image wx:if="{{item.avatar}}" class="avatar" src="{{item.avatar}}" mode="aspectFill"/>
+<view wx:else class="avatar avatar-placeholder">{{item.initial}}</view>
+<view class="grow">
+<text class="member-name">{{item.name}}{{item.isSelf ? '（我）' : ''}}</text>
+<text class="muted block small">{{item.squadName}}</text>
+</view>
+<text class="pill {{item.response === 'not_attending' ? 'neutral' : 'success'}}">{{item.statusText}}</text>
+</view>
+<text class="muted block small spaced" wx:if="{{item.arrivalText}}">预计到达：{{item.arrivalText}}（北京时间）</text>
+</view>
+<text class="muted block" wx:if="{{!participantItems.length && !participantsLoading && !participantsError}}">暂无成员回复报名。</text>
+<text class="end-note" wx:if="{{participantItems.length}}">已显示 {{participantItems.length}} / {{participantTotal}} 人</text>
+<button wx:if="{{participantsCursor}}" class="secondary-button roster-more" bindtap="loadMoreParticipants" loading="{{participantsLoading}}" disabled="{{participantsLoading || submitting}}">加载更多</button>
+<text class="muted block small" wx:if="{{participantUpdatedText}}">统计更新于 {{participantUpdatedText}}</text>
+</block>
+<text class="muted block spaced" wx:if="{{participantsLoading && !participantCounts}}">正在读取报名统计与名单…</text>
+<view wx:if="{{participantsError}}" class="notice warning">
+<text>{{participantsError}}</text>
+<button class="secondary-button small-button" bindtap="refreshParticipants" disabled="{{participantsLoading || submitting}}">重新读取名单</button>
+</view>
+</view>
+</block>
+</block>
+<view class="participant-mask" wx:if="{{selectedParticipant}}" bindtap="closeParticipant">
+<view class="participant-dialog" catchtap="keepParticipantOpen">
+<view class="row-between participant-dialog-heading">
+<text class="section-title">成员资料</text>
+<button class="secondary-button small-button participant-close" bindtap="closeParticipant" aria-label="关闭成员资料">×</button>
+</view>
+<view class="row">
+<image wx:if="{{selectedParticipant.avatar}}" class="avatar" src="{{selectedParticipant.avatar}}" mode="aspectFill"/>
+<view wx:else class="avatar avatar-placeholder">{{selectedParticipant.initial}}</view>
+<view class="grow"><text class="member-name">{{selectedParticipant.name}}</text><text class="muted block small">{{selectedParticipant.squadName}}</text></view>
+</view>
+<view class="divider"/>
+<view wx:if="{{selectedParticipant.steamId}}" class="participant-steam" bindtap="copyParticipantSteamId">
+<text class="label">SteamID</text>
+<text class="participant-steam-id">{{selectedParticipant.steamId}}</text>
+<text class="muted block small">点击复制</text>
+</view>
+<text wx:else class="muted block">暂无 SteamID</text>
+<text class="label spaced">专长</text>
+<view class="tags" wx:if="{{selectedParticipant.specialtyTags.length}}">
+<text class="pill tag-pill tone-{{tag.tone}}" wx:for="{{selectedParticipant.specialtyTags}}" wx:for-item="tag" wx:key="id">{{tag.label}}</text>
+</view>
+<text wx:else class="muted block">暂无专长</text>
+</view>
+</view>
+</view>

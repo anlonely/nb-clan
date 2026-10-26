@@ -1,0 +1,91 @@
+services:
+  nb-clan-member-system:
+    build:
+      context: .
+      args:
+        APP_UID: "${NB_CONTAINER_UID:-10001}"
+        APP_GID: "${NB_CONTAINER_GID:-10001}"
+        VITE_BRAND_NAME: "${VITE_BRAND_NAME:-Clan Portal}"
+        VITE_SOURCE_URL: "${VITE_SOURCE_URL:-https://github.com/anlonely/nb-clan}"
+    image: ${NB_IMAGE:-nb-clan-member-system:latest}
+    container_name: nb-clan-member-system
+    init: true
+    user: "${NB_CONTAINER_UID:-10001}:${NB_CONTAINER_GID:-10001}"
+    restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    cpus: "${NB_CONTAINER_CPUS:-1.5}"
+    mem_limit: "${NB_CONTAINER_MEMORY_LIMIT:-1536m}"
+    mem_reservation: "${NB_CONTAINER_MEMORY_RESERVATION:-512m}"
+    pids_limit: ${NB_CONTAINER_PIDS_LIMIT:-256}
+    stop_signal: SIGTERM
+    stop_grace_period: ${NB_STOP_GRACE_PERIOD:-45s}
+    environment:
+      - NODE_ENV=production
+      - NB_BRAND_NAME=${NB_BRAND_NAME:-Clan Portal}
+      - PORT=8787
+      - NB_BIND_HOST=0.0.0.0
+      - NB_LOCAL_MODE=${NB_LOCAL_MODE:-1}
+      - NB_LOCAL_CONTAINER=${NB_LOCAL_CONTAINER:-1}
+      - NB_OWNER_PASSWORD_LOGIN=${NB_OWNER_PASSWORD_LOGIN:-1}
+      - NB_SHUTDOWN_GRACE_MS=${NB_SHUTDOWN_GRACE_MS:-30000}
+      - NB_DATA_DIR=/app/data
+      - NB_STORAGE_MODE=${NB_STORAGE_MODE:-sqlite}
+      - NB_SQLITE_FILE=${NB_SQLITE_FILE:-/app/data/nb-clan.sqlite}
+      - NB_TRUST_PROXY=${NB_TRUST_PROXY:-0}
+      - NB_PUBLIC_BASE_URL=${NB_PUBLIC_BASE_URL:-}
+      - NB_V2_PRODUCTION_ENABLED=${NB_V2_PRODUCTION_ENABLED:-1}
+      - NB_V2_IDENTITY_ENABLED=${NB_V2_IDENTITY_ENABLED:-1}
+      - NB_V2_PUBLIC_ORIGIN=${NB_V2_PUBLIC_ORIGIN:-http://127.0.0.1:8787}
+      - NB_V2_DISCORD_OAUTH_REDIRECT_URI=${NB_V2_DISCORD_OAUTH_REDIRECT_URI:-}
+      - NB_V2_KOOK_OAUTH_REDIRECT_URI=${NB_V2_KOOK_OAUTH_REDIRECT_URI:-}
+      - NB_DISABLE_EXTERNAL_VITAL=${NB_DISABLE_EXTERNAL_VITAL:-1}
+      - NB_RUST_KDA_PROVIDER=${NB_RUST_KDA_PROVIDER:-internal}
+      - NB_PROXY_URL=${NB_PROXY_URL:-}
+      - NB_BATTLEMETRICS_PROXY_URL=${NB_BATTLEMETRICS_PROXY_URL:-}
+      - NB_KDA_PROXY_URL=${NB_KDA_PROXY_URL:-}
+      - NB_STEAM_WEB_API_KEY=${NB_STEAM_WEB_API_KEY:-}
+      - STEAM_WEB_API_KEY=${STEAM_WEB_API_KEY:-}
+      - STEAM_API_KEY=${STEAM_API_KEY:-}
+      - NB_DISCORD_OAUTH_CLIENT_ID=${NB_DISCORD_OAUTH_CLIENT_ID:-}
+      - NB_DISCORD_OAUTH_CLIENT_SECRET=${NB_DISCORD_OAUTH_CLIENT_SECRET:-}
+      - NB_DISCORD_OAUTH_REDIRECT_URI=${NB_DISCORD_OAUTH_REDIRECT_URI:-}
+      - NB_DISCORD_BOT_TOKEN=${NB_DISCORD_BOT_TOKEN:-}
+      - NB_DISCORD_PUBLIC_KEY=${NB_DISCORD_PUBLIC_KEY:-}
+      - NB_DISCORD_APPLICATION_ID=${NB_DISCORD_APPLICATION_ID:-}
+      - NB_KOOK_OAUTH_CLIENT_ID=${NB_KOOK_OAUTH_CLIENT_ID:-}
+      - NB_KOOK_OAUTH_CLIENT_SECRET=${NB_KOOK_OAUTH_CLIENT_SECRET:-}
+      - NB_KOOK_OAUTH_REDIRECT_URI=${NB_KOOK_OAUTH_REDIRECT_URI:-}
+      - NB_KOOK_OAUTH_GUILD_ID=${NB_KOOK_OAUTH_GUILD_ID:-}
+      - NB_KOOK_OAUTH_LOGIN_ORIGIN=${NB_KOOK_OAUTH_LOGIN_ORIGIN:-}
+      - NB_KOOK_OAUTH_ENABLED=${NB_KOOK_OAUTH_ENABLED:-}
+      - NB_KOOK_BOT_TOKEN=${NB_KOOK_BOT_TOKEN:-}
+      - NB_KOOK_VERIFY_TOKEN=${NB_KOOK_VERIFY_TOKEN:-}
+      - NB_KOOK_ENCRYPT_KEY=${NB_KOOK_ENCRYPT_KEY:-}
+      - NB_KOOK_EVENTS_PUBLIC_URL=${NB_KOOK_EVENTS_PUBLIC_URL:-}
+      - NB_TRANSLATION_API_BASE_URL=${NB_TRANSLATION_API_BASE_URL:-}
+      - NB_TRANSLATION_API_KEY=${NB_TRANSLATION_API_KEY:-}
+      - NB_TRANSLATION_MODEL=${NB_TRANSLATION_MODEL:-gpt-5.4-mini}
+      - NB_RUSTMAPS_API_KEY=${NB_RUSTMAPS_API_KEY:-}
+      - NB_RUSTMAPS_API_BASE_URL=${NB_RUSTMAPS_API_BASE_URL:-}
+      - NB_WECHAT_APPID=${NB_WECHAT_APPID:-}
+      - NB_WECHAT_SECRET=${NB_WECHAT_SECRET:-}
+      - NB_WECHAT_APP_SECRET=${NB_WECHAT_APP_SECRET:-}
+      - NB_WECHAT_AUTO_REVIEW_ENABLED=${NB_WECHAT_AUTO_REVIEW_ENABLED:-}
+    ports:
+      - "127.0.0.1:8787:8787"
+    volumes:
+      - nb-data:/app/data
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=${NB_CONTAINER_TMPFS_SIZE:-256m},mode=1777
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+volumes:
+  nb-data:

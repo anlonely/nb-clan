@@ -1,0 +1,38 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import express from 'express';
+import {createServer} from 'node:http';
+import {createFixture} from './support/v2-notifications/fixture.js';
+import {PlatformAdminService} from '../server/v2/platform-admin/service.js';
+import {installPlatformAdminSchema} from '../server/v2/platform-admin/repository.js';
+import {createPlatformAdminRouter} from '../server/v2/platform-admin/routes.js';
+import {createIdentityRouter} from '../server/v2/identity/routes.js';
+import {upsertSqliteCollectionRecord} from '../server/storage/sqlite-migrate.js';
+
+test('shared electrician HTTP route uses real sessions, CSRF, revision and idempotent save',async t=>{
+ const f=createFixture({adminRole:true});installPlatformAdminSchema(f.db);let queuedReads=0;const image='https://avatars.steamstatic.com/'+ 'a'.repeat(40)+'_full.jpg';const service=new PlatformAdminService({identity:f.identity});
+ f.identity.repo.put('members',{id:'admin-member',steamId:'76561198000000001',memberStatus:'active'});f.identity.repo.put('accounts',{...f.identity.repo.get('accounts','admin'),memberId:'admin-member'});
+ f.identity.repo.put('bindings',{id:'admin-binding',accountId:'admin',memberId:'admin-member',steamId:'76561198000000001',status:'verified'});f.identity.repo.put('identities',{id:'discord-admin',accountId:'admin',provider:'discord',externalId:'demo-admin'});
+ upsertSqliteCollectionRecord(f.db,'memberProfiles','electrician-profile',{id:'electrician-profile',memberId:'admin-member',steamId:'76561198000000001',avatar:image});
+ f.identity.repo.put('policies',{id:'discord',provider:'discord',enabled:true,guildId:'1554983512321425488',allowedRoleIds:['demo-role'],matchMode:'any',policyRevision:1});f.identity.providers={discord:{roles:async externalId=>({externalId,guildId:'1554983512321425488',roleIds:['demo-role']})}};
+ const evidence=await f.identity.checkEligibility('discord','demo-admin'),session=f.identity.issueSession(f.identity.repo.get('accounts','admin'),evidence);
+ const app=express(),server=createServer(app);await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin=`http://127.0.0.1:${server.address().port}`,auth=createIdentityRouter({service:f.identity,origin});
+ app.use('/api/v2',(req,res,next)=>{req.v2Identity={service:f.identity,authenticate:o=>auth.authenticate(o)(req)};next();});app.use('/api/v2',auth,createPlatformAdminRouter({getSystem:()=>({service,runOperation:operation=>{queuedReads++;return operation();}})}));
+ t.after(async()=>{await auth.stopEvents();server.closeAllConnections();await new Promise(r=>server.close(r));f.close();});
+ const body={expectedRevision:0,entries:[{kind:'member',group:'CN',memberId:'admin-member'}]},headers={Cookie:`nb_v2_session=${session.token}`,Origin:origin,'X-CSRF-Token':session.csrfToken,'Content-Type':'application/json','Idempotency-Key':'same-save'};
+ const post=async options=>{const response=await fetch(origin+'/api/v2/platform-admin/electricians',{method:'POST',body:JSON.stringify(body),headers,...options});return {status:response.status,body:await response.json()};};
+ assert.equal((await fetch(origin+'/api/v2/platform-admin/electricians')).status,401);
+ assert.equal((await post({headers:{...headers,'X-CSRF-Token':''}})).status,403);
+ assert.equal((await post({headers:{...headers,Origin:'https://different.example'}})).status,403);
+ assert.equal(queuedReads,0);
+ const initial=await fetch(origin+'/api/v2/platform-admin/electricians',{headers});assert.equal(initial.status,200);assert.deepEqual((await initial.json()).data.entries,[]);assert.equal(service.repo.get('electrician-roster','shared'),null);
+ assert.equal((await post({headers:{...headers,'Idempotency-Key':''}})).body.error.errorCode,'IDEMPOTENCY_KEY_REQUIRED');
+ const result=await post();assert.equal(result.status,200);assert.equal(result.body.data.current.resolved.china[0].url,'https://steamcommunity.com/profiles/76561198000000001/');
+ assert.equal((await post()).body.data.revision,1);
+ assert.equal((await post({headers:{...headers,'Idempotency-Key':'another-save'}})).body.error.errorCode,'REVISION_CONFLICT');
+ assert.equal((await post({body:JSON.stringify({...body,entries:[]})})).body.error.errorCode,'IDEMPOTENCY_CONFLICT');
+ const get=await fetch(origin+'/api/v2/platform-admin/electricians',{headers});assert.equal(get.status,200);assert.equal(get.headers.get('cache-control'),'no-store');const detail=(await get.json()).data;assert.equal(detail.revision,1);assert.equal(detail.resolved.china[0].avatar,image);
+ assert.equal(queuedReads,7);
+ f.identity.repo.put('accounts',{...f.identity.repo.get('accounts','admin'),adminAssignedByOwner:false});
+ assert.equal((await fetch(origin+'/api/v2/platform-admin/electricians',{headers})).status,401);
+});

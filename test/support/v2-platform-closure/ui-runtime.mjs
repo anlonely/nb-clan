@@ -1,0 +1,10 @@
+import {createServer} from 'vite';
+import react from '@vitejs/plugin-react';
+import {createRequire} from 'node:module';
+import {writeFile,mkdir} from 'node:fs/promises';
+const root=process.cwd(),require=createRequire(new URL('../../../package.json', import.meta.url)),dir=root+'/test/support/v2-platform-closure/.runtime';
+await mkdir(dir,{recursive:true});
+const vite=await createServer({root,appType:'custom',configFile:false,envFile:false,envDir:false,cacheDir:dir+'/vite',plugins:[react()],resolve:{alias:['react/jsx-dev-runtime','react/jsx-runtime','react-dom/client','react-dom','react','lucide-react'].map(name=>({find:new RegExp('^'+name+'$'),replacement:require.resolve(name)}))},server:{host:'127.0.0.1',port:0,strictPort:false,fs:{allow:[root,decodeURIComponent(new URL('../../../node_modules', import.meta.url).pathname)],deny:['.env','.env.*','**/data/**','**/.git/**','**/work/**']}}});
+vite.middlewares.use(async(req,res,next)=>{if(req.url!=='/')return next();res.setHeader('Content-Type','text/html');res.end(await vite.transformIndexHtml('/', '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>平台终态验证</title><div id="root"></div><script type="module" src="/test/support/v2-platform-closure/ui-entry.jsx"></script></html>'));});
+await vite.listen();await writeFile(dir+'/ui.json',JSON.stringify({origin:vite.resolvedUrls.local[0],pid:process.pid}));console.log(vite.resolvedUrls.local[0]);
+for(const signal of ['SIGINT','SIGTERM'])process.once(signal,async()=>{await vite.close();process.exit(0);});

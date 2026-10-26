@@ -1,0 +1,9 @@
+services:
+  nb-clan-member-system:
+    build:
+      context: .
+      dockerfile: Dockerfile.prebuilt
+      args:
+        APP_UID: "${NB_CONTAINER_UID:-10001}"
+        APP_GID: "${NB_CONTAINER_GID:-10001}"
+    image: ${NB_IMAGE:-nb-clan-member-system:latest}

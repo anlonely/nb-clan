@@ -1,0 +1,36 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [unit, core, integration, migration, browser, mini]
+    env:
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.23.1
+          cache: npm
+      - run: npm ci
+      - name: Verify browser availability
+        if: matrix.suite == 'browser'
+        run: |
+          test -x "$PUPPETEER_EXECUTABLE_PATH"
+          # Isolated probes intentionally discard inherited environment values.
+          # Provide the standard Linux path their deterministic lookup accepts.
+          if ! test -x /usr/bin/chromium && ! test -x /usr/bin/chromium-browser; then
+            sudo ln -s "$PUPPETEER_EXECUTABLE_PATH" /usr/bin/chromium
+          fi
+      - run: node scripts/test.mjs ${{ matrix.suite }}
+      - run: npm run verify --prefix wechat-miniprogram
+        if: matrix.suite == 'mini'

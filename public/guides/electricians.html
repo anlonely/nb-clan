@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#171d24" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>添加电工好友 · Clan Portal</title>
+    <link rel="stylesheet" href="/guides/electricians.css?v=language-switch-2" />
+    <script type="module" src="/guides/electricians.js?v=browser-language-5"></script>
+    <script type="module" src="/guides/tutorial-video.js?v=media-cache-3"></script>
+  </head>
+  <body>
+    <main>
+      <header class="page-header">
+        <a class="brand" href="/" aria-label="Clan Portal 首页"><img class="brand-mark" src="/guides/clan-logo.svg" alt="" width="48" height="48" /><span>Clan Portal<small id="brand-tagline">一起开荒，一起回家。</small></span></a>
+        <div class="page-header-actions">
+          <span class="page-label" id="page-label">开荒准备</span>
+          <div id="language-switch" class="language-switch" role="group" aria-label="页面语言">
+            <button type="button" data-language="zh-CN" lang="zh-CN" aria-pressed="true">中文</button>
+            <button type="button" data-language="en" lang="en" aria-pressed="false">English</button>
+          </div>
+        </div>
+      </header>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">GET READY TO WIPE</p>
+          <h1 id="page-title">开荒前，先加电工好友</h1>
+          <p class="description" id="page-description">点击头像或「去添加好友」，前往 Steam 主页。</p>
+        </div>
+        <div class="tutorial-actions"><button id="show-tutorial" class="tutorial-button" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="m10 8 6 4-6 4V8Z" fill="currentColor"/></svg><span id="tutorial-label-zh">中文教程</span></button><button id="show-tutorial-en" class="tutorial-button" type="button" aria-haspopup="dialog"><span id="tutorial-label-en">英文教程</span></button></div>
+      </section>
+      <section id="load-state" class="notice" role="status" aria-live="polite">
+        <p id="load-message">正在读取电工名单…</p>
+        <button id="retry-load" class="secondary-button" type="button" hidden>重新读取名单</button>
+      </section>
+      <div id="groups" class="groups" hidden>
+        <section class="group" aria-labelledby="china-title">
+          <div class="group-heading"><div><span class="group-dot" aria-hidden="true"></span><h2 id="china-title">CN电工</h2></div><span id="china-count" class="count">0</span></div>
+          <ul id="china-list" class="profile-list"></ul><p id="china-empty" class="empty" hidden>暂未配置CN电工。</p>
+        </section>
+        <section class="group" aria-labelledby="foreign-title">
+          <div class="group-heading"><div><span class="group-dot alternate" aria-hidden="true"></span><h2 id="foreign-title">EU电工</h2></div><span id="foreign-count" class="count">0</span></div>
+          <ul id="foreign-list" class="profile-list"></ul><p id="foreign-empty" class="empty" hidden>暂未配置EU电工。</p>
+        </section>
+      </div>
+      <noscript><p class="notice">请启用浏览器 JavaScript 后查看电工名单。</p></noscript>
+      <footer><span id="footer-note">添加前，请确认已登录自己的 Steam 账号。</span><span>Clan Portal</span></footer>
+    </main>
+    <dialog lang="zh-CN" id="tutorial-dialog" aria-labelledby="tutorial-title">
+      <div class="dialog-heading"><div><p class="eyebrow">STEAM FRIENDS</p><h2 id="tutorial-title">如何添加电工好友</h2></div><form method="dialog"><button class="close-button" type="submit" aria-label="关闭教程">×</button></form></div>
+
+      <p class="tutorial-caption">打开名单中的 Steam 主页，确认账号后点击「添加好友」。发送申请后返回名单，继续添加其他电工。</p>
+    </dialog>
+    <dialog lang="en" id="tutorial-dialog-en" aria-labelledby="tutorial-title-en">
+      <div class="dialog-heading"><div><p class="eyebrow">STEAM FRIENDS</p><h2 id="tutorial-title-en">How to add the electricians</h2></div><form method="dialog"><button class="close-button" type="submit" aria-label="Close tutorial">×</button></form></div>
+
+      <p class="tutorial-caption">Open a Steam profile from the list, verify the account, and select Add Friend. Return to the list to add the remaining electricians.</p>
+    </dialog>
+  </body>
+</html>

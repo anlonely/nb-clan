@@ -1,0 +1,10 @@
+# HTTPS deployment behind a reverse proxy. Supply your own public origin.
+# docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --build
+services:
+  nb-clan-member-system:
+    environment:
+      - NB_LOCAL_MODE=0
+      - NB_LOCAL_CONTAINER=0
+      - NB_OWNER_PASSWORD_LOGIN=${NB_OWNER_PASSWORD_LOGIN:-0}
+      - NB_PUBLIC_BASE_URL=${NB_PUBLIC_BASE_URL:?Set your HTTPS public base URL}
+      - NB_V2_PUBLIC_ORIGIN=${NB_V2_PUBLIC_ORIGIN:?Set your HTTPS V2 public origin}

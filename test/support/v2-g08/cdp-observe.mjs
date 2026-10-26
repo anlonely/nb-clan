@@ -1,0 +1,3 @@
+// Optional read-only inspection of the owned measurement browser, never user Chrome.
+import fs from 'node:fs/promises';import puppeteer from 'puppeteer-core';
+const dir=process.argv[2];if(!dir?.includes('/work/v2-g08/run-'))throw Error('Owned run directory required');const [port,endpoint]=(await fs.readFile(dir+'/chrome/DevToolsActivePort','utf8')).trim().split('\n');const browser=await puppeteer.connect({browserWSEndpoint:`ws://127.0.0.1:${port}${endpoint}`});try{console.log(JSON.stringify(await Promise.all((await browser.pages()).map(async p=>({url:p.url(),title:await p.title(),visible:await p.evaluate(()=>!document.hidden),body:(await p.evaluate(()=>document.body.innerText)).slice(0,1500)})))));}finally{await browser.disconnect();}

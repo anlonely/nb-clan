@@ -1,0 +1,78 @@
+.electrician-admin{display:grid;gap:18px;min-width:0}
+.electrician-heading{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:4px 0}
+.electrician-heading .eyebrow{display:block;margin-bottom:7px;font-size:11px}
+.electrician-heading h2{display:flex;align-items:center;gap:10px;margin:0;font-size:23px}
+.electrician-heading h2 svg{color:var(--accent)}
+.electrician-heading p{margin:8px 0 0;color:var(--muted);font-size:13px}
+.electrician-overview{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:14px}
+.electrician-stat{display:flex;align-items:center;gap:14px;padding:18px 22px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+.electrician-region{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--border);border-radius:11px;background:var(--subtle);color:var(--accent);font-size:13px;font-weight:700;flex-shrink:0}
+.electrician-stat.eu .electrician-region{color:var(--green)}
+.electrician-stat>div{display:grid;gap:5px;flex:1}.electrician-stat>div>span{font-size:13px;color:var(--muted)}
+.electrician-stat strong{font-size:28px;line-height:1.15;font-weight:650;font-variant-numeric:tabular-nums}
+.electrician-stat strong small{margin-left:8px;font-size:11px;color:var(--muted);font-weight:400}
+.electrician-workspace{display:grid;grid-template-columns:340px minmax(0,1fr);gap:20px;align-items:start}
+.electrician-workspace>.panel{padding:20px;min-width:0;margin:0;box-shadow:none}
+.electrician-panel-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.electrician-panel-title h3{display:flex;align-items:center;gap:9px;margin:0;font-size:16px}
+.electrician-panel-title>span{font-size:11px;color:var(--muted)}
+.electrician-methods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;background:var(--subtle);border:1px solid var(--border);border-radius:9px;margin-bottom:22px}
+.electrician-methods button{display:flex;justify-content:center;align-items:center;gap:5px;min-height:38px;padding:5px 3px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:12px;line-height:1.4}
+.electrician-methods button[aria-pressed=true]{background:var(--surface);color:var(--accent);box-shadow:0 1px 4px #0002}
+.electrician-fields{display:grid;gap:17px;padding:0;margin:0;min-width:0;border:0}
+.electrician-fields label{display:grid;gap:8px;font-size:13px;font-weight:550}
+.electrician-field-label{display:block;margin-bottom:8px;font-size:13px;font-weight:550}
+.electrician-admin input:not([type=checkbox]){min-width:0;width:100%;min-height:41px;padding:10px 11px;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);font-size:13px}
+.electrician-admin input::placeholder{color:var(--muted);opacity:.7}
+.electrician-fields small{font-size:11px;color:var(--muted);font-weight:400;line-height:1.65}
+.electrician-group-choice{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.electrician-group-choice button{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--muted);font-size:13px}
+.electrician-group-choice button[aria-pressed=true]{border-color:var(--accent);background:var(--soft);color:var(--accent)}
+.electrician-fields>.notice{font-size:12px;padding:12px;gap:8px}.electrician-fields>.notice svg{width:17px;height:17px}.electrician-fields>.button{width:100%;justify-content:center;min-height:42px;margin-top:2px;font-size:13px}
+.electrician-draft-hint{text-align:center;margin-top:-8px}
+.electrician-search-box{display:flex;align-items:center;gap:7px;min-width:0;padding-left:10px;border:1px solid var(--border);border-radius:7px;color:var(--muted);background:var(--surface)}
+.electrician-search-box input:not([type=checkbox]){border:0;background:transparent;padding-left:0;min-height:37px}
+.electrician-selection-tools{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted);margin-bottom:-7px}
+.electrician-selection-tools>span{margin-right:auto;color:var(--accent)}
+.electrician-selection-tools button{padding:3px 0;border:0;background:transparent;font-size:11px;color:var(--muted)}
+.electrician-selection-tools button:hover{color:var(--accent)}
+.electrician-member-picker{display:grid;gap:6px;max-height:340px;overflow-y:auto;overscroll-behavior:contain;padding:2px}
+.electrician-member-picker label{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:var(--surface)}
+.electrician-member-picker label.selected{border-color:var(--accent);background:var(--soft)}
+.electrician-member-picker input{width:15px;height:15px;margin:0;accent-color:var(--accent);flex-shrink:0}
+.electrician-person-initial,.electrician-source-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:var(--subtle);color:var(--accent);font-size:13px;flex-shrink:0}
+.electrician-member-text{min-width:0;display:grid;gap:3px}.electrician-member-text strong{font-size:13px;overflow-wrap:anywhere}.electrician-member-text small{font-size:11px;overflow-wrap:anywhere}
+.electrician-specialties{display:flex;flex-wrap:wrap;gap:4px}.electrician-specialties>span{padding:1px 6px;border:1px solid var(--border);border-radius:12px;font-size:9px;color:var(--muted);font-weight:400}
+.electrician-rule-summary{display:flex;align-items:flex-start;gap:10px;padding:14px;border:1px solid var(--border);border-radius:8px;background:var(--subtle);color:var(--accent)}
+.electrician-rule-summary strong{display:block;font-size:13px}.electrician-rule-summary small{display:block;margin-top:5px}
+.electrician-list-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px;flex-wrap:wrap}
+.electrician-filters{display:flex;gap:4px;flex-shrink:0}.electrician-filters button{display:flex;align-items:center;gap:6px;padding:7px 9px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:11px}
+.electrician-filters button[aria-pressed=true]{background:var(--soft);color:var(--accent)}
+.electrician-filters button span{font-size:11px;font-variant-numeric:tabular-nums;opacity:.7}
+.electrician-list-toolbar>.electrician-search-box{flex:1;min-width:170px;max-width:255px}
+.electrician-source-list{display:grid;grid-template-columns:32px minmax(0,1fr) max-content 90px;column-gap:12px;max-height:580px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:18px}
+.electrician-source-row{display:grid;grid-template-columns:subgrid;grid-column:1/-1;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--border);min-width:0}
+.electrician-source-list>.electrician-empty{grid-column:1/-1}
+.electrician-source-main{flex:1;min-width:0}.electrician-source-main strong{display:flex;align-items:center;gap:7px;font-size:13px;overflow-wrap:anywhere}
+.electrician-source-main a{display:inline-flex;color:var(--muted);padding:3px;flex-shrink:0}.electrician-source-main a:hover{color:var(--accent)}
+.electrician-source-main small{display:block;margin-top:4px;color:var(--muted);font-size:11px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.electrician-source-tags{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.electrician-group-tag,.electrician-kind-tag{border:1px solid var(--border);border-radius:12px;padding:3px 8px;font-size:11px;white-space:nowrap;color:var(--muted)}
+.electrician-group-tag.cn{color:var(--accent);background:var(--soft);border-color:transparent}.electrician-group-tag.eu{color:var(--green);background:var(--green-bg);border-color:transparent}
+.electrician-source-row>.button{display:flex;justify-content:center;width:100%;gap:5px;white-space:nowrap;min-height:32px;padding:5px 7px;font-size:11px;flex-shrink:0;color:var(--muted)}
+.electrician-source-row>.button svg{flex-shrink:0}
+.electrician-source-row>.button:hover{color:var(--danger);background:var(--danger-bg)}
+.electrician-empty{display:grid;justify-items:center;gap:9px;text-align:center;padding:35px 12px;color:var(--muted);font-size:13px}.electrician-empty strong{color:var(--text)}.electrician-empty p{margin:0;font-size:11px}
+.electrician-preview{border-top:1px solid var(--border);margin-top:14px;padding-top:14px}
+.electrician-preview summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;color:var(--muted);font-size:13px}
+.electrician-preview summary::-webkit-details-marker{display:none}.electrician-preview summary>span{display:flex;align-items:center;gap:8px}.electrician-preview[open] summary>svg{transform:rotate(180deg)}
+.electrician-preview>p{font-size:11px;color:var(--muted);margin:12px 0}
+.electrician-preview-groups{display:grid;grid-template-columns:1fr 1fr;gap:16px}.electrician-preview-groups h4{display:flex;justify-content:space-between;font-size:13px;margin:0 0 8px}.electrician-preview-groups h4>span{color:var(--muted)}
+.electrician-preview-groups a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;font-size:13px;overflow-wrap:anywhere}.electrician-preview-groups a:hover{color:var(--accent)}.electrician-preview-groups a svg{color:var(--muted)}.electrician-preview-groups p{font-size:11px;color:var(--muted)}
+.electrician-feedback{display:flex;align-items:center;gap:9px;padding:11px 15px;border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--green);font-size:13px}.electrician-feedback>.button{margin-left:auto;font-size:11px;min-height:30px;padding:5px 9px}
+.electrician-savebar{position:sticky;bottom:12px;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:16px;border:1px solid var(--border);border-radius:11px;background:var(--surface);padding:14px 20px;box-shadow:0 4px 20px #0002}
+.electrician-savebar>div:first-child{display:flex;align-items:center;gap:11px}.electrician-save-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0}.electrician-save-dot.dirty{background:var(--warning)}
+.electrician-savebar strong{display:block;font-size:13px}.electrician-savebar small{display:block;font-size:11px;color:var(--muted);margin-top:4px}.electrician-save-actions{display:flex;align-items:center;gap:8px}.electrician-save-actions .button{min-height:38px;padding:8px 12px;font-size:13px;white-space:nowrap}
+@media(max-width:1150px){.electrician-source-list{grid-template-columns:32px minmax(0,1fr) max-content 36px;column-gap:9px}.electrician-workspace{grid-template-columns:310px minmax(0,1fr);gap:14px}.electrician-workspace>.panel{padding:17px}.electrician-source-tags{flex-direction:column;gap:4px}.electrician-source-row{gap:9px}.electrician-source-row>.button>span{display:none}.electrician-panel-title>span{display:none}}
+@media(max-width:950px){.electrician-source-list{grid-template-columns:32px minmax(0,1fr) max-content 90px;column-gap:12px}.electrician-workspace{grid-template-columns:1fr}.electrician-builder form{max-width:none}.electrician-overview{gap:10px}.electrician-stat{padding:15px;gap:10px}.electrician-stat>.badge{display:none}.electrician-stat strong{font-size:25px}.electrician-source-tags{flex-direction:row}.electrician-source-row>.button>span{display:inline}.electrician-member-picker{grid-template-columns:1fr 1fr}.electrician-source-list{max-height:480px}}
+@media(max-width:600px){.electrician-source-list{grid-template-columns:32px minmax(0,1fr) max-content 36px;column-gap:8px;padding-inline-end:16px}.electrician-heading{align-items:flex-start}.electrician-heading p{font-size:13px}.electrician-heading>.badge{display:none}.electrician-overview{grid-template-columns:1fr 1fr}.electrician-overview>.electrician-stat:last-child{grid-column:1/-1;padding:13px 15px}.electrician-stat:last-child>div{display:flex;align-items:center;justify-content:space-between}.electrician-stat strong{font-size:24px}.electrician-region{width:36px;height:36px}.electrician-list-toolbar>.electrician-search-box{max-width:none;width:100%;flex-basis:100%}.electrician-member-picker{grid-template-columns:1fr}.electrician-source-row{gap:8px}.electrician-kind-tag{display:none}.electrician-source-row>.button>span{display:none}.electrician-preview-groups{grid-template-columns:1fr}.electrician-savebar{flex-wrap:wrap;bottom:8px;padding:13px 15px;gap:12px}.electrician-save-actions{width:100%;justify-content:flex-end}.electrician-feedback{flex-wrap:wrap}.electrician-feedback>span{flex:1;min-width:130px}}

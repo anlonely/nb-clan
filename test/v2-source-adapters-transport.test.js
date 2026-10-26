@@ -1,0 +1,34 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createBattlemetricsQueueRuntime } from '../server/battlemetrics-queue.js';
+import { createBattlemetricsReadTransport } from '../server/v2/management-adapters/sources/transport.js';
+const response = () => new Response('{}', { status: 200 });
+const tick = () => new Promise(r => setImmediate(r));
+test('cancelled queued BM request consumes no HTTP and shared queue preserves manual priority', async () => {
+  const queue = createBattlemetricsQueueRuntime({ minIntervalMs: 0, requestsPerMinute: 100 });
+  let release, entered = false; const calls = [];
+  const request = createBattlemetricsReadTransport({ queue, get: async path => { calls.push(path); if (path === '/hold') { entered = true; await new Promise(r => release = r); } return response(); } });
+  const first = request('/hold', { queueMeta: { source: 'manual-sync' } });
+  while (!entered) await tick();
+  const cancelled = new AbortController();
+  const second = request('/cancelled', { queueMeta: { source: 'manual-sync' }, signal: cancelled.signal });
+  const rejection = assert.rejects(second, { errorCode: 'SOURCE_TIMEOUT' }); cancelled.abort(); await rejection;
+  const auto = request('/auto', { queueMeta: { source: 'hourly-sync' } });
+  const manual = request('/manual', { queueMeta: { source: 'manual-query' } });
+  release(); await Promise.all([first, auto, manual]);
+  assert.deepEqual(calls, ['/hold', '/manual', '/auto']);
+  assert.equal(queue.snapshot().limits.globalUsed, 3); assert.equal(queue.snapshot().limits.autoUsed, 1);
+  assert.equal(queue.snapshot().pendingCount, 0);
+});
+test('shared BM minute reserve applies to automatic HTTP while manual query uses remaining capacity', async () => {
+  const queue = createBattlemetricsQueueRuntime({ minIntervalMs: 0, requestsPerMinute: 4, autoRequestsPerMinute: 3, rateLimitWindowMs: 80 });
+  const observed = [];
+  const request = createBattlemetricsReadTransport({ queue, get: async path => { observed.push({ path, at: Date.now() }); return response(); } });
+  const auto = path => request(path, { queueMeta: { source: 'hourly-sync' } });
+  await auto('/a'); await auto('/b'); await auto('/c');
+  assert.equal(queue.snapshot().limits.autoRemaining, 0); assert.equal(queue.snapshot().limits.manualReservePerMinute, 1);
+  await request('/manual', { queueMeta: { source: 'manual-query' } });
+  await auto('/d');
+  assert.ok(observed.at(-1).at - observed[0].at >= 65);
+  assert.deepEqual(observed.map(x => x.path), ['/a', '/b', '/c', '/manual', '/d']);
+});

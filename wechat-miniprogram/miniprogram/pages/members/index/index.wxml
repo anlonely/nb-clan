@@ -1,0 +1,48 @@
+<import src="../../../templates/states.wxml"/>
+<view class="page">
+<view class="page-header">
+<text class="eyebrow">一起并肩作战</text>
+<text class="title">队伍成员</text>
+<text class="subtitle">查看全部队伍，认识每一位队友。</text>
+</view>
+<template wx:if="{{errorText}}" is="error" data="{{errorText}}"/>
+<block>
+<view class="card">
+<input class="input" value="{{query}}" bindinput="search" placeholder="搜索昵称或 SteamID"/>
+<picker class="spaced block" range="{{squads}}" range-key="name" value="{{squadIndex}}" bindchange="selectSquad">
+<view class="picker">{{squads[squadIndex].name}} · 选择队伍</view>
+</picker>
+<picker class="spaced block" range="{{specialtyOptions}}" range-key="label" value="{{specialtyIndex}}" bindchange="selectSpecialty">
+<view class="picker">{{specialtyOptions[specialtyIndex].label}} · 筛选专长</view>
+</picker>
+<text class="muted block spaced">共 {{total}} 位成员</text>
+</view>
+<view class="card" wx:if="{{items.length}}">
+<view class="list-item member-card" wx:for="{{items}}" wx:key="id">
+<view class="row">
+<image class="avatar" wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill"/>
+<view wx:else class="avatar avatar-placeholder">员</view>
+<view class="grow">
+<text class="member-name">{{item.name}}</text>
+<text class="muted block small">{{item.squadsText}}</text>
+</view>
+</view>
+<view class="member-steamid" bindtap="copySteamId" data-steamid="{{item.steamId}}" hover-class="{{item.steamId ? 'member-steamid-pressed' : 'none'}}" aria-label="{{item.steamId ? '复制 SteamID ' + item.steamId : '尚未关联 Steam'}}">
+<text class="member-steamid-label">SteamID</text>
+<text class="member-steamid-value">{{item.steamId || '尚未关联'}}</text>
+<text class="member-copy-hint" wx:if="{{item.steamId}}">复制</text>
+</view>
+<view class="tags member-specialties" wx:if="{{item.specialtyTags.length}}">
+<text class="pill tag-pill tone-{{tag.tone}}" wx:for="{{item.specialtyTags}}" wx:for-item="tag" wx:key="id">{{tag.label}}</text>
+</view>
+<text class="muted block small spaced" wx:else>暂无专长</text>
+</view>
+</view>
+<view wx:if="{{!items.length && !loading && !errorText}}" class="card empty-state">
+<text class="muted">暂无匹配的成员。</text>
+</view>
+<text class="end-note" wx:if="{{loadingMore}}">正在加载更多…</text>
+<text class="end-note" wx:if="{{items.length && !hasMore && !loading}}">已显示全部成员</text>
+</block>
+<template wx:if="{{loading}}" is="loading"/>
+</view>

@@ -1,0 +1,77 @@
+<import src="../../../templates/states.wxml"/>
+<view class="page">
+<view class="page-header">
+<text class="eyebrow">账号与身份</text>
+<text class="title">信息关联</text>
+<text class="subtitle">用同一个战队身份，连接 Steam、KOOK 和 Discord。</text>
+</view>
+<template wx:if="{{loading}}" is="loading"/>
+<template wx:if="{{errorText}}" is="error" data="{{errorText}}"/>
+<block wx:if="{{linked}}">
+<view class="card" wx:for="{{identities}}" wx:key="provider">
+<view class="row-between">
+<text class="section-title">{{item.title}}</text>
+<text class="pill {{item.linked ? 'success' : 'neutral'}}">{{item.statusText}}</text>
+</view>
+<view class="row identity-summary">
+<image wx:if="{{item.displayAvatar}}" class="avatar {{item.isCommunity ? 'community-avatar' : ''}}" src="{{item.displayAvatar}}" mode="aspectFill" binderror="avatarError" data-provider="{{item.provider}}"/>
+<view wx:else class="avatar identity-avatar-placeholder {{item.isCommunity ? 'community-avatar' : ''}}">{{item.avatarPlaceholder}}</view>
+<view class="grow">
+<text class="muted block small" wx:if="{{item.isCommunity && item.linked}}">{{item.title}} 服务器</text>
+<text class="member-name">{{item.isCommunity ? item.communityName : item.displayName}}</text>
+<text class="muted block small" wx:if="{{item.isCommunity && item.accountName}}">关联账号：{{item.accountName}}</text>
+<text class="muted block small" wx:if="{{!item.isCommunity && item.externalId}}" selectable="true">SteamID {{item.externalId}}</text>
+</view>
+</view>
+<text class="muted block small spaced" wx:if="{{item.communityNote}}">{{item.communityNote}}</text>
+<text class="identity-role-label" wx:if="{{item.isCommunity && item.linked}}">我的服务器角色</text>
+<text class="muted block small spaced" wx:if="{{item.rolesNote}}">{{item.rolesNote}}</text>
+<view class="tags" wx:if="{{item.roles.length}}">
+<text class="pill tag-pill tone-{{role.tone}}" wx:for="{{item.roles}}" wx:for-item="role" wx:key="id">{{role.name}}</text>
+</view>
+</view>
+<view class="card" wx:if="{{roles.length}}">
+<text class="section-title">战队角色</text>
+<view class="tags">
+<text class="pill tag-pill tone-{{item.tone}}" wx:for="{{roles}}" wx:key="id">{{item.name}}</text>
+</view>
+</view>
+<text class="end-note">平台账号与角色以官网已关联的信息为准。</text>
+</block>
+<block wx:if="{{!linked && !loading}}">
+<view class="card">
+<text class="section-title">手机关联</text>
+<text class="muted block">1. 获取关联码，复制官网地址到浏览器打开。</text>
+<text class="muted block">2. 在官网通过 KOOK 登录，输入关联码。</text>
+<text class="muted block">3. 返回这里核对账号，确认关联。</text>
+<button class="primary-button" bindtap="createCode" loading="{{creating}}" disabled="{{creating || confirming}}">{{link ? '重新获取关联码' : '获取关联码'}}</button>
+<button class="secondary-button" bindtap="copyWebsite">复制官网地址</button>
+</view>
+<view class="card" wx:if="{{link}}">
+<text class="section-title">{{link.status === 'awaiting_confirmation' ? '请核对关联账号' : '等待官网确认'}}</text>
+<block wx:if="{{link.code && link.status !== 'awaiting_confirmation'}}">
+<text class="code" selectable="true">{{link.code}}</text>
+<button class="secondary-button" bindtap="copyCode">复制关联码</button>
+</block>
+<block wx:if="{{link.target}}">
+<view class="row">
+<image wx:if="{{link.target.avatar}}" class="avatar" src="{{link.target.avatar}}" mode="aspectFill"/>
+<view class="grow">
+<text class="member-name">{{link.target.displayName}}</text>
+<text class="muted block" selectable="true">Steam {{link.target.steamId}}</text>
+<text class="muted block" selectable="true">KOOK {{link.target.kookId}}</text>
+</view>
+</view>
+<text class="notice block">确认后，这个微信将关联到上方战队账号。请确认是你本人。</text>
+<button class="primary-button" bindtap="confirm" loading="{{confirming}}" disabled="{{confirming || link.status !== 'awaiting_confirmation'}}">确认是我，完成关联</button>
+</block>
+<text class="muted block spaced">有效期至 {{link.expiresAtText}}</text>
+<button wx:if="{{link.status !== 'awaiting_confirmation'}}" class="secondary-button" bindtap="checkStatus" loading="{{checking}}">我已在官网操作，刷新状态</button>
+</view>
+<view class="card">
+<text class="section-title">电脑扫码关联</text>
+<text class="muted block">在电脑官网通过 KOOK 登录，打开「关联微信」页面，再扫描页面上的二维码。</text>
+<button class="secondary-button" bindtap="scan" loading="{{scanning}}" disabled="{{scanning || confirming}}">扫描官网二维码</button>
+</view>
+</block>
+</view>

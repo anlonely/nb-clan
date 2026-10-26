@@ -1,0 +1,20 @@
+.wipe-title-actions{margin-left:auto;align-self:center;justify-content:flex-end;flex-shrink:0}
+.wipe-title-actions>.button{white-space:nowrap}
+.modal.server-connect-modal{width:min(1000px,94vw);max-height:90vh}
+.server-connect-modal .modal-body{max-height:calc(90vh - 165px);overflow:auto}
+.server-connect-editor{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:30px;align-items:start}
+.server-connect-fields .field{margin-bottom:18px}
+.server-connect-fields textarea{font-family:ui-monospace,monospace;resize:vertical}
+.server-connect-fields .caption{margin:0;color:var(--muted)}
+.server-connect-preview{min-width:0;border:1px solid var(--border);border-radius:10px;padding:20px;background:var(--subtle)}
+.server-connect-preview>header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
+.server-connect-preview>header>span{display:flex;align-items:center;gap:8px;font-weight:600}
+.server-connect-preview>header>small{font-size:11px;color:var(--muted);white-space:nowrap}
+.server-connect-card{border:1px solid var(--border);border-left:4px solid var(--accent);background:var(--surface);padding:20px;border-radius:8px;overflow-wrap:anywhere}
+.server-connect-card.discord{border-left-color:#5865f2}
+.server-connect-card h3{margin:0 0 20px;font-size:18px}
+.server-connect-card-body{white-space:pre-wrap;font-size:14px;line-height:1.8}
+.server-connect-card-body pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--subtle);border:1px solid var(--border);border-radius:6px;padding:12px;margin:10px 0 0;font-size:12px}
+.server-connect-placeholder{min-height:190px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;color:var(--muted);font-size:14px;text-align:center}
+.server-connect-ready{display:flex;align-items:center;gap:7px;color:var(--green);font-size:12px;margin:16px 0 0}
+.server-connect-preview .notice{margin:16px 0 0}

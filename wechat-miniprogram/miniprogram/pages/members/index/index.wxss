@@ -1,0 +1,8 @@
+.member-card .grow{min-width:0}
+.member-card .member-name{white-space:normal;overflow-wrap:anywhere}
+.member-steamid{display:flex;align-items:center;gap:12rpx;min-height:72rpx;padding:14rpx 16rpx;margin-top:20rpx;border-radius:12rpx;background:var(--bg)}
+.member-steamid-label{flex-shrink:0;color:var(--muted);font-size:22rpx}
+.member-steamid-value{flex:1;min-width:0;font-family:monospace;font-size:25rpx;overflow-wrap:anywhere;color:var(--text)}
+.member-copy-hint{flex-shrink:0;color:var(--blue);font-size:22rpx}
+.member-steamid-pressed{opacity:.65}
+.member-specialties{margin-top:16rpx}

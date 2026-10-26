@@ -1,0 +1,8 @@
+# Optional bind storage for operators migrating an existing ./data directory.
+# Ensure ownership matches NB_CONTAINER_UID/NB_CONTAINER_GID before starting.
+services:
+  nb-clan-member-system:
+    volumes:
+      - type: bind
+        source: ./data
+        target: /app/data

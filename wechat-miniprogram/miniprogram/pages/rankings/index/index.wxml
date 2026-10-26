@@ -1,0 +1,43 @@
+<import src="../../../templates/states.wxml"/>
+<view class="page">
+<view class="page-header">
+<text class="eyebrow">每一份贡献，都被看见</text>
+<text class="title">排行榜</text>
+<text class="subtitle">按开荒档期查看 Vital 服务器数据。</text>
+</view>
+<template wx:if="{{errorText}}" is="error" data="{{errorText}}"/>
+<block>
+<view class="card" wx:if="{{wipes.length}}">
+<text class="label">开荒档期</text>
+<picker range="{{wipes}}" range-key="title" value="{{wipeIndex}}" bindchange="selectWipe">
+<view class="picker">{{wipes[wipeIndex].title}}</view>
+</picker>
+<text class="muted block spaced">{{wipes[wipeIndex].serverName}} · Vital</text>
+<text class="muted small block" wx:if="{{updatedAtText}}">更新于 {{updatedAtText}}</text>
+</view>
+<scroll-view class="metric-scroll" scroll-x="true">
+<text class="metric-chip {{metric === item.key ? 'active' : ''}}" wx:for="{{metrics}}" wx:key="key" bindtap="selectMetric" data-key="{{item.key}}">{{item.label}}</text>
+</scroll-view>
+<view class="card" wx:if="{{items.length}}">
+<view class="row-between">
+<text class="section-title">{{metricLabel}}</text>
+<text class="muted small">{{total}} 位成员</text>
+</view>
+<view class="list-item row" wx:for="{{items}}" wx:key="memberId">
+<text class="rank {{item.rank && item.rank <= 3 ? 'top' : ''}}">{{item.rank || '—'}}</text>
+<image wx:if="{{item.avatar}}" class="avatar" src="{{item.avatar}}" mode="aspectFill"/>
+<view class="grow">
+<text class="member-name">{{item.name}}</text>
+<text class="muted small">{{item.squadName || '未分队'}}</text>
+</view>
+<text class="rank-value">{{item.displayValue}}</text>
+</view>
+</view>
+<view class="card empty-state" wx:if="{{!items.length && !loading && !errorText}}">
+<text class="section-title">暂无排行数据</text>
+<text class="muted">{{wipes.length ? '该档期暂未采集到对应数据。' : '当前没有可展示的 Vital 开荒档期。'}}</text>
+</view>
+<text class="end-note" wx:if="{{loadingMore}}">正在加载更多…</text>
+</block>
+<template wx:if="{{loading}}" is="loading"/>
+</view>

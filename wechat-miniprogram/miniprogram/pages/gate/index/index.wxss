@@ -1,0 +1,2 @@
+/* 固定头像入口尺寸，避免微信 button 默认宽度撑开布局。 */
+.avatar-button{flex:0 0 120rpx;min-width:120rpx;max-width:120rpx;overflow:hidden}

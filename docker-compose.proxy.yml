@@ -1,0 +1,28 @@
+# Optional operator-managed HTTP/SOCKS proxy; set NB_EGRESS_CONFIG explicitly.
+# docker compose -f docker-compose.yml -f docker-compose.proxy.yml up -d --build
+services:
+  nb-egress:
+    image: ghcr.io/sagernet/sing-box@sha256:afbffd294c5eb3519cc7b4587299ef189bb0a2ca2f667cb6301fdb6b9bce9558
+    init: true
+    restart: unless-stopped
+    user: "${NB_CONTAINER_UID:-10001}:${NB_CONTAINER_GID:-10001}"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    command: [run, -c, /etc/sing-box/config.json]
+    volumes:
+      - type: bind
+        source: ${NB_EGRESS_CONFIG:?Set NB_EGRESS_CONFIG to your sing-box config file}
+        target: /etc/sing-box/config.json
+        read_only: true
+    healthcheck:
+      test: [CMD, sing-box, check, -c, /etc/sing-box/config.json]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  nb-clan-member-system:
+    depends_on:
+      nb-egress:
+        condition: service_healthy
+    environment:
+      - NB_PROXY_URL=${NB_PROXY_URL:?Set NB_PROXY_URL to the configured proxy listener, e.g. http://nb-egress:2080}

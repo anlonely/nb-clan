@@ -1,0 +1,320 @@
+:root {
+  color-scheme: light;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --bg: #f7f9fc;
+  --surface: rgba(255, 255, 255, 0.86);
+  --surface-strong: #ffffff;
+  --line: #e1e6ef;
+  --text: #1f242d;
+  --muted: #697386;
+  --primary: #2563eb;
+  --primary-strong: #1d4ed8;
+  --green: #0f9f6e;
+  --red: #d92d20;
+  --amber: #b7791f;
+  --shadow: 0 18px 48px rgba(53, 74, 116, 0.14);
+  --panel-shadow: 0 12px 32px rgba(72, 86, 111, 0.08);
+  --query-shadow: 0 18px 52px rgba(62, 79, 113, 0.14);
+  --result-shadow: 0 14px 34px rgba(72, 86, 111, 0.1);
+  --media-shadow: 0 10px 24px rgba(72, 86, 111, 0.08);
+  --primary-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+  --brand-shadow: 0 10px 26px rgba(37, 99, 235, 0.22);
+  --primary-button-text: #ffffff;
+  --page-bg:
+    radial-gradient(circle at 20% 10%, rgba(124, 221, 255, 0.24), transparent 26%),
+    radial-gradient(circle at 92% 20%, rgba(255, 192, 112, 0.18), transparent 24%),
+    linear-gradient(180deg, #fbfdff 0%, var(--bg) 100%);
+  --ambient-bg:
+    radial-gradient(circle at 30% 30%, rgba(77, 136, 255, 0.22), transparent 34%),
+    radial-gradient(circle at 68% 50%, rgba(39, 190, 142, 0.16), transparent 30%);
+  --panel-border: rgba(223, 229, 238, 0.92);
+  --control-bg: rgba(255, 255, 255, 0.96);
+  --control-quiet-bg: rgba(255, 255, 255, 0.76);
+  --label: #364052;
+  --placeholder: #9aa4b2;
+  --ghost-text: #374151;
+  --ghost-bg: rgba(255, 255, 255, 0.74);
+  --button-text: #435065;
+  --button-bg: rgba(255, 255, 255, 0.82);
+  --sidebar-bg: rgba(255, 255, 255, 0.72);
+  --sidebar-border: rgba(224, 231, 242, 0.82);
+  --nav-text: #4b5567;
+  --nav-active-text: #12306f;
+  --nav-active-bg: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(15, 159, 110, 0.1));
+  --chip-bg: rgba(255, 255, 255, 0.72);
+  --query-border: rgba(218, 225, 236, 0.9);
+  --query-bg: rgba(255, 255, 255, 0.88);
+  --query-icon: #6b7586;
+  --table-border: rgba(225, 230, 239, 0.78);
+  --table-head-bg: rgba(248, 250, 252, 0.82);
+  --table-head-text: #667085;
+  --image-bg: #ffffff;
+  --modal-bg: #ffffff;
+  --modal-backdrop: rgba(15, 23, 42, 0.24);
+  --alert-text: #193b78;
+  --alert-bg: rgba(37, 99, 235, 0.08);
+  --alert-border: rgba(37, 99, 235, 0.18);
+  --toast-bg: rgba(255, 255, 255, 0.94);
+  --toast-text: #243246;
+  --success-text: #075e45;
+  --success-bg: rgba(15, 159, 110, 0.12);
+  --danger-text: #8a2018;
+  --danger-bg: rgba(217, 45, 32, 0.1);
+  --muted-badge-text: #667085;
+  --muted-badge-bg: rgba(102, 112, 133, 0.13);
+  --pending-text: #8a5d13;
+  --pending-bg: rgba(183, 121, 31, 0.13);
+  --warning-text: #8a5d13;
+  --warning-bg: rgba(183, 121, 31, 0.13);
+  --warning-border: rgba(183, 121, 31, 0.26);
+  --primary-soft-text: #1f3b73;
+  --primary-soft-bg: rgba(37, 99, 235, 0.11);
+  --active-border: rgba(37, 99, 235, 0.35);
+  --active-bg: linear-gradient(135deg, rgba(37, 99, 235, 0.11), rgba(15, 159, 110, 0.08));
+  --focus-border: rgba(37, 99, 235, 0.56);
+  --focus-ring: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  --danger-border: rgba(217, 45, 32, 0.2);
+  --vip-text: #7c2d12;
+  --vip-bg: linear-gradient(180deg, rgba(254, 243, 199, 0.98), rgba(253, 230, 138, 0.82));
+  --vip-border: rgba(217, 119, 6, 0.34);
+  --vip-shadow: 0 8px 18px rgba(180, 83, 9, 0.1);
+  --vip-priority-text: #7c2d12;
+  --vip-priority-bg: linear-gradient(180deg, rgba(255, 237, 213, 0.98), rgba(254, 215, 170, 0.86));
+  --vip-priority-border: rgba(234, 88, 12, 0.34);
+  --vip-queue-text: #4c1d95;
+  --vip-queue-bg: linear-gradient(180deg, rgba(237, 233, 254, 0.98), rgba(221, 214, 254, 0.86));
+  --vip-queue-border: rgba(124, 58, 237, 0.34);
+  --vip-queue-shadow: 0 8px 18px rgba(109, 40, 217, 0.1);
+  --sidebar-width: clamp(236px, 14vw, 288px);
+  --workspace-padding: clamp(20px, 2.2vw, 40px);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d1219;
+  --surface: rgba(19, 26, 36, 0.88);
+  --surface-strong: #151c27;
+  --line: #2d3747;
+  --text: #e8eef8;
+  --muted: #a3b0c3;
+  --primary: #78a9ff;
+  --primary-strong: #a6c4ff;
+  --green: #4bd19a;
+  --red: #ff7a7a;
+  --amber: #f4c96f;
+  --shadow: 0 18px 52px rgba(0, 0, 0, 0.36);
+  --panel-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
+  --query-shadow: 0 18px 52px rgba(0, 0, 0, 0.3);
+  --result-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
+  --media-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  --primary-shadow: 0 12px 24px rgba(120, 169, 255, 0.16);
+  --brand-shadow: 0 10px 26px rgba(120, 169, 255, 0.18);
+  --primary-button-text: #06101f;
+  --page-bg:
+    radial-gradient(circle at 18% 10%, rgba(83, 146, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 92% 22%, rgba(28, 190, 148, 0.12), transparent 26%),
+    linear-gradient(180deg, #121a25 0%, var(--bg) 100%);
+  --ambient-bg:
+    radial-gradient(circle at 30% 30%, rgba(96, 165, 250, 0.18), transparent 36%),
+    radial-gradient(circle at 68% 50%, rgba(34, 197, 142, 0.12), transparent 30%);
+  --panel-border: rgba(62, 74, 94, 0.9);
+  --control-bg: rgba(14, 20, 29, 0.94);
+  --control-quiet-bg: rgba(18, 25, 36, 0.88);
+  --label: #c9d4e5;
+  --placeholder: #75849a;
+  --ghost-text: #d8e2f2;
+  --ghost-bg: rgba(20, 28, 40, 0.78);
+  --button-text: #d8e2f2;
+  --button-bg: rgba(20, 28, 40, 0.82);
+  --sidebar-bg: rgba(15, 21, 30, 0.82);
+  --sidebar-border: rgba(46, 58, 76, 0.88);
+  --nav-text: #b6c4d7;
+  --nav-active-text: #eaf2ff;
+  --nav-active-bg: linear-gradient(135deg, rgba(120, 169, 255, 0.18), rgba(75, 209, 154, 0.12));
+  --chip-bg: rgba(20, 28, 40, 0.74);
+  --query-border: rgba(50, 63, 83, 0.94);
+  --query-bg: rgba(18, 25, 35, 0.9);
+  --query-icon: #9caac0;
+  --table-border: rgba(47, 59, 77, 0.9);
+  --table-head-bg: rgba(22, 30, 42, 0.92);
+  --table-head-text: #aebbd0;
+  --image-bg: #111822;
+  --modal-bg: #151c27;
+  --modal-backdrop: rgba(3, 7, 18, 0.62);
+  --alert-text: #bfd4ff;
+  --alert-bg: rgba(120, 169, 255, 0.12);
+  --alert-border: rgba(120, 169, 255, 0.22);
+  --toast-bg: rgba(21, 28, 39, 0.96);
+  --toast-text: #e8eef8;
+  --success-text: #8df0c4;
+  --success-bg: rgba(75, 209, 154, 0.14);
+  --danger-text: #ffb4b4;
+  --danger-bg: rgba(255, 122, 122, 0.13);
+  --muted-badge-text: #bac6d8;
+  --muted-badge-bg: rgba(151, 164, 183, 0.16);
+  --pending-text: #f8d98b;
+  --pending-bg: rgba(244, 201, 111, 0.14);
+  --warning-text: #f8d98b;
+  --warning-bg: rgba(244, 201, 111, 0.14);
+  --warning-border: rgba(244, 201, 111, 0.3);
+  --primary-soft-text: #cfe0ff;
+  --primary-soft-bg: rgba(120, 169, 255, 0.16);
+  --active-border: rgba(120, 169, 255, 0.32);
+  --active-bg: linear-gradient(135deg, rgba(120, 169, 255, 0.18), rgba(75, 209, 154, 0.12));
+  --focus-border: rgba(120, 169, 255, 0.62);
+  --focus-ring: 0 0 0 4px rgba(120, 169, 255, 0.16);
+  --danger-border: rgba(255, 122, 122, 0.28);
+  --vip-text: #fff7c2;
+  --vip-bg: linear-gradient(180deg, rgba(161, 98, 7, 0.62), rgba(113, 63, 18, 0.72));
+  --vip-border: rgba(250, 204, 21, 0.55);
+  --vip-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 18px rgba(113, 63, 18, 0.16);
+  --vip-priority-text: #fef3c7;
+  --vip-priority-bg: linear-gradient(180deg, rgba(180, 83, 9, 0.66), rgba(146, 64, 14, 0.76));
+  --vip-priority-border: rgba(245, 158, 11, 0.58);
+  --vip-queue-text: #f1e8ff;
+  --vip-queue-bg: linear-gradient(180deg, rgba(109, 40, 217, 0.68), rgba(91, 33, 182, 0.78));
+  --vip-queue-border: rgba(167, 139, 250, 0.58);
+  --vip-queue-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 18px rgba(91, 33, 182, 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"],
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg: #0d1219;
+    --surface: rgba(19, 26, 36, 0.88);
+    --surface-strong: #151c27;
+    --line: #2d3747;
+    --text: #e8eef8;
+    --muted: #a3b0c3;
+    --primary: #78a9ff;
+    --primary-strong: #a6c4ff;
+    --green: #4bd19a;
+    --red: #ff7a7a;
+    --amber: #f4c96f;
+    --shadow: 0 18px 52px rgba(0, 0, 0, 0.36);
+    --panel-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
+    --query-shadow: 0 18px 52px rgba(0, 0, 0, 0.3);
+    --result-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
+    --media-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+    --primary-shadow: 0 12px 24px rgba(120, 169, 255, 0.16);
+    --brand-shadow: 0 10px 26px rgba(120, 169, 255, 0.18);
+    --primary-button-text: #06101f;
+    --page-bg:
+      radial-gradient(circle at 18% 10%, rgba(83, 146, 255, 0.18), transparent 28%),
+      radial-gradient(circle at 92% 22%, rgba(28, 190, 148, 0.12), transparent 26%),
+      linear-gradient(180deg, #121a25 0%, var(--bg) 100%);
+    --ambient-bg:
+      radial-gradient(circle at 30% 30%, rgba(96, 165, 250, 0.18), transparent 36%),
+      radial-gradient(circle at 68% 50%, rgba(34, 197, 142, 0.12), transparent 30%);
+    --panel-border: rgba(62, 74, 94, 0.9);
+    --control-bg: rgba(14, 20, 29, 0.94);
+    --control-quiet-bg: rgba(18, 25, 36, 0.88);
+    --label: #c9d4e5;
+    --placeholder: #75849a;
+    --ghost-text: #d8e2f2;
+    --ghost-bg: rgba(20, 28, 40, 0.78);
+    --button-text: #d8e2f2;
+    --button-bg: rgba(20, 28, 40, 0.82);
+    --sidebar-bg: rgba(15, 21, 30, 0.82);
+    --sidebar-border: rgba(46, 58, 76, 0.88);
+    --nav-text: #b6c4d7;
+    --nav-active-text: #eaf2ff;
+    --nav-active-bg: linear-gradient(135deg, rgba(120, 169, 255, 0.18), rgba(75, 209, 154, 0.12));
+    --chip-bg: rgba(20, 28, 40, 0.74);
+    --query-border: rgba(50, 63, 83, 0.94);
+    --query-bg: rgba(18, 25, 35, 0.9);
+    --query-icon: #9caac0;
+    --table-border: rgba(47, 59, 77, 0.9);
+    --table-head-bg: rgba(22, 30, 42, 0.92);
+    --table-head-text: #aebbd0;
+    --image-bg: #111822;
+    --modal-bg: #151c27;
+    --modal-backdrop: rgba(3, 7, 18, 0.62);
+    --alert-text: #bfd4ff;
+    --alert-bg: rgba(120, 169, 255, 0.12);
+    --alert-border: rgba(120, 169, 255, 0.22);
+    --toast-bg: rgba(21, 28, 39, 0.96);
+    --toast-text: #e8eef8;
+    --success-text: #8df0c4;
+    --success-bg: rgba(75, 209, 154, 0.14);
+    --danger-text: #ffb4b4;
+    --danger-bg: rgba(255, 122, 122, 0.13);
+    --muted-badge-text: #bac6d8;
+    --muted-badge-bg: rgba(151, 164, 183, 0.16);
+    --pending-text: #f8d98b;
+    --pending-bg: rgba(244, 201, 111, 0.14);
+    --warning-text: #f8d98b;
+    --warning-bg: rgba(244, 201, 111, 0.14);
+    --warning-border: rgba(244, 201, 111, 0.3);
+    --primary-soft-text: #cfe0ff;
+    --primary-soft-bg: rgba(120, 169, 255, 0.16);
+    --active-border: rgba(120, 169, 255, 0.32);
+    --active-bg: linear-gradient(135deg, rgba(120, 169, 255, 0.18), rgba(75, 209, 154, 0.12));
+    --focus-border: rgba(120, 169, 255, 0.62);
+    --focus-ring: 0 0 0 4px rgba(120, 169, 255, 0.16);
+    --danger-border: rgba(255, 122, 122, 0.28);
+    --vip-text: #fff7c2;
+    --vip-bg: linear-gradient(180deg, rgba(161, 98, 7, 0.62), rgba(113, 63, 18, 0.72));
+    --vip-border: rgba(250, 204, 21, 0.55);
+    --vip-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 18px rgba(113, 63, 18, 0.16);
+    --vip-priority-text: #fef3c7;
+    --vip-priority-bg: linear-gradient(180deg, rgba(180, 83, 9, 0.66), rgba(146, 64, 14, 0.76));
+    --vip-priority-border: rgba(245, 158, 11, 0.58);
+    --vip-queue-text: #f1e8ff;
+    --vip-queue-bg: linear-gradient(180deg, rgba(109, 40, 217, 0.68), rgba(91, 33, 182, 0.78));
+    --vip-queue-border: rgba(167, 139, 250, 0.58);
+    --vip-queue-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 18px rgba(91, 33, 182, 0.18);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  line-height: 1.5;
+  background: var(--page-bg);
+  color: var(--text);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

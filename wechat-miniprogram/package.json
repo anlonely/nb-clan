@@ -1,0 +1,12 @@
+{
+  "name": "nb-clan-wechat-miniprogram",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Clan Portal WeChat member client",
+  "scripts": {
+    "check": "node scripts/check.js",
+    "test": "node --test test/*.test.js",
+    "verify": "npm run check && npm test"
+  },
+  "license": "AGPL-3.0-only"
+}
