@@ -30,7 +30,7 @@
     "busboy": "^1.6.0",
     "express": "^5.2.1",
     "https-proxy-agent": "^7.0.6",
-    "jszip": "^3.10.1",
+    "jszip": "^3.10.2",
     "node-fetch": "^3.3.2",
     "puppeteer-core": "^25.1.0",
     "qrcode": "^1.5.4",
